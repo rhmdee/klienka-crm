@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      RoleType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deals     Deal[]
+}
+
+model Client {
+  id           String   @id @default(uuid())
+  clientName   String
+  companyName  String
+  contactEmail String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deals        Deal[]
+}
+
+model Deal {
+  id              String    @id @default(uuid())
+  title           String
+  stage           DealStage @default(INQUIRY)
+  estimatedBudget BigInt    @default(0)
+  techStack       String[]
+  lossReason      String?
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  clientId        String
+  client          Client    @relation(fields: [clientId], references: [id])
+  sows            SOW[]
+  handoff         Handoff?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model SOW {
+  id               String    @id @default(uuid())
+  version          Int       @default(1)
+  status           SOWStatus @default(DRAFT)
+  totalCost        BigInt    @default(0)
+  marginPercentage Float     @default(20.0)
+  magicLinkToken   String?   @unique
+  tokenExpiresAt   DateTime?
+  dealId           String
+  deal             Deal      @relation(fields: [dealId], references: [id])
+  items            SOWItem[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model SOWItem {
+  id        String @id @default(uuid())
+  roleName  String
+  manDays   Int
+  dailyRate BigInt
+  subtotal  BigInt
+  sowId     String
+  sow       SOW    @relation(fields: [sowId], references: [id])
+}
+
+model Handoff {
+  id               String   @id @default(uuid())
+  dealId           String   @unique
+  deal             Deal     @relation(fields: [dealId], references: [id])
+  assignedOperator String // Disimpan sebagai String murni dari generalParam.value tanpa Foreign Key (BR-DAT-01 & BR-DAT-02)
+  briefNotes       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model GeneralParam {
+  id          String  @id @default(uuid())
+  paramKey    String  @unique
+  paramValue  String
+  description String?
+}
+
+enum RoleType {
+  ADMINISTRATOR
+  BUSINESS_DEVELOPMENT
+  PROJECT_MANAGER
+  OPERATIONAL_TEAM
+}
+
+enum DealStage {
+  INQUIRY
+  DISCOVERY_CALL
+  SOW_ESTIMATION
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum SOWStatus {
+  DRAFT
+  SENT
+  REVISING
+  APPROVED
+}
