@@ -1,14 +1,39 @@
 import Sidebar from "@/components/layouts/sidebar";
 import Header from "@/components/layouts/header";
 import { ContentTop, PageContent } from "@/components/layouts/main-content";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/auth";
+import { UserStoreHydrator } from "@/components/providers/user-store-hydrator";
 
-export default function WebAppLayout({
+export default async function WebAppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const currUser = await getCurrentUser();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const userPayload = currUser
+    ? {
+        name: currUser.name,
+        role: currUser.role,
+      }
+    : null;
+
+  // Pengamanan lapis kedua: Jika tidak ada user aktif, lempar ke login
+  if (!user || !currUser) {
+    redirect("/login");
+  }
+
   return (
     <div className="w-screen h-screen p-2 flex gap-1.5 bg-accent overflow-hidden">
+      {/* Mengisi Zustand store secara otomatis saat halaman dibuka */}
+      <UserStoreHydrator user={userPayload} />
+
       {/* Sidebar Component with responsive fixed (mobile) / static (lg) */}
       <Sidebar />
 
