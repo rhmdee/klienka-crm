@@ -3,6 +3,10 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 export type ThemeMode = "light" | "dark" | "system";
 export type DeviceType = "mobile" | "tablet" | "desktop";
+export interface UserProfile {
+  name: string;
+  role: string;
+}
 
 interface AppState {
   // --- Theme State ---
@@ -20,6 +24,10 @@ interface AppState {
   toggleSidebar: () => void;
   toggleSidebarExpand: () => void;
   setSidebarOpen: (isOpen: boolean) => void;
+
+  // --- User State ---
+  currentUser: UserProfile | null;
+  setCurrentUser: (user: UserProfile | null) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -31,6 +39,7 @@ export const useAppStore = create<AppState>()(
       isMobile: false,
       isSidebarOpen: false, // Default closed on mobile
       isSidebarExpand: true, // Default expanded on desktop/lg
+      currentUser: null,
 
       // --- Actions: Theme ---
       setTheme: (theme: ThemeMode) => {
@@ -75,6 +84,11 @@ export const useAppStore = create<AppState>()(
       },
       setSidebarOpen: (isOpen: boolean) => {
         set({ isSidebarOpen: isOpen });
+      },
+
+      // --- ACtions: User ---
+      setCurrentUser: (user: UserProfile | null) => {
+        set({ currentUser: user });
       },
     }),
     {

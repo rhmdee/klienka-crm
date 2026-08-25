@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Backdrop } from "@/components/layouts/sidebar/backdrop";
 import { AppName } from "@/components/layouts/app-name";
 import { Navigation } from "@/components/layouts/sidebar/navigation";
-import { UserInfo } from "@/components/layouts/user-info";
+import { UserInfo } from "@/components/layouts/sidebar/user-info";
 
 interface SidebarProps {
   className?: string;
@@ -17,7 +17,7 @@ export default function Sidebar({ className }: SidebarProps) {
   return (
     <>
       {/* Mobile Backdrop Overlay (only active when sidebar is open on mobile/tablet portrait) */}
-      {isSidebarOpen && <Backdrop />}
+      <Backdrop />
 
       <aside
         className={cn(

@@ -1,7 +1,12 @@
+"use client";
+
 import { useAppStore } from "@/stores/useAppStore";
 
 export const Backdrop = () => {
-  const { setSidebarOpen } = useAppStore();
+  const { setSidebarOpen, isSidebarOpen } = useAppStore();
+
+  if (!isSidebarOpen) return null;
+
   return (
     <div
       role="presentation"
