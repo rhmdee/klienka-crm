@@ -29,10 +29,9 @@ export function ClientTable({
   onDelete,
 }: ClientTableProps) {
   return (
-    <Card className="border-border bg-card overflow-hidden shadow-xs p-0">
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs text-left border-collapse">
-          <thead>
+    <div className="overflow-x-auto w-full">
+      <table className="w-full text-xs text-left border-collapse">
+        <thead>
             <tr className="border-b border-border bg-muted/40 text-muted-foreground font-medium">
               <th className="py-3 px-4 w-1/3">Klien & Perusahaan</th>
               <th className="py-3 px-4 w-1/4">Informasi Kontak</th>
@@ -190,7 +189,6 @@ export function ClientTable({
             )}
           </tbody>
         </table>
-      </div>
-    </Card>
+    </div>
   );
 }

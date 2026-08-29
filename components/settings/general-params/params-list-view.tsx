@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { GeneralParamItem } from "./types";
 import { ParamsHeader } from "./params-header";
 import { ParamsTable } from "./params-table";
 import { ParamFormDialog } from "./param-form-dialog";
 import { ParamDeleteAlert } from "./param-delete-alert";
+import { DataTablePagination } from "@/components/ui/data-table-pagination";
 import { useRouter } from "next/navigation";
 
 interface ParamsListViewProps {
@@ -17,6 +18,9 @@ export function ParamsListView({ initialParams }: ParamsListViewProps) {
   const [params, setParams] = useState<GeneralParamItem[]>(initialParams);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [paramToEdit, setParamToEdit] = useState<GeneralParamItem | null>(null);
@@ -54,6 +58,16 @@ export function ParamsListView({ initialParams }: ParamsListViewProps) {
     });
   }, [params, searchQuery]);
 
+  const paginatedParams = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredParams.slice(startIndex, startIndex + pageSize);
+  }, [filteredParams, currentPage, pageSize]);
+
+  // Reset to first page when filtering
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   const handleOpenAdd = () => {
     setParamToEdit(null);
     setIsFormOpen(true);
@@ -81,12 +95,24 @@ export function ParamsListView({ initialParams }: ParamsListViewProps) {
       />
 
       {/* Main Table Component matching Handoff Table */}
-      <ParamsTable
-        params={filteredParams}
-        isLoading={isLoading}
-        onEdit={handleOpenEdit}
-        onDelete={handleOpenDelete}
-      />
+      <div className="flex flex-col border border-border rounded-xl bg-card overflow-hidden shadow-xs">
+        <ParamsTable
+          params={paginatedParams}
+          isLoading={isLoading}
+          onEdit={handleOpenEdit}
+          onDelete={handleOpenDelete}
+        />
+        <DataTablePagination
+          totalItems={filteredParams.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
 
       {/* Modal Dialog Tambah / Edit */}
       <ParamFormDialog

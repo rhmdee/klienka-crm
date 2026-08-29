@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HandoffDealItem, formatIDR } from "./types";
 
@@ -21,10 +20,9 @@ interface HandoffTableProps {
 
 export function HandoffTable({ deals, isLoading }: HandoffTableProps) {
   return (
-    <Card className="border-border bg-card overflow-hidden shadow-xs p-0">
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs text-left border-collapse">
-          <thead>
+    <div className="overflow-x-auto w-full">
+      <table className="w-full text-xs text-left border-collapse">
+        <thead>
             <tr className="border-b border-border bg-muted/40 text-muted-foreground font-medium">
               <th className="py-3 px-4">Proyek & Klien</th>
               <th className="py-3 px-4">Tech Stack</th>
@@ -184,7 +182,6 @@ export function HandoffTable({ deals, isLoading }: HandoffTableProps) {
             )}
           </tbody>
         </table>
-      </div>
-    </Card>
+    </div>
   );
 }

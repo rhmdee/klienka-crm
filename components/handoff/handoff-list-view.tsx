@@ -7,6 +7,8 @@ import { HandoffHeader } from "./handoff-header";
 import { HandoffStats } from "./handoff-stats";
 import { HandoffFilterControls } from "./handoff-filter-controls";
 import { HandoffTable } from "./handoff-table";
+import { DataTablePagination } from "@/components/ui/data-table-pagination";
+import { useMemo } from "react";
 
 export function HandoffListView() {
   const [deals, setDeals] = useState<HandoffDealItem[]>([]);
@@ -15,6 +17,9 @@ export function HandoffListView() {
   const [filterStatus, setFilterStatus] = useState<
     "ALL" | "ASSIGNED" | "PENDING"
   >("ALL");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     let ignore = false;
@@ -85,6 +90,16 @@ export function HandoffListView() {
     return matchesSearch;
   });
 
+  const paginatedDeals = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredDeals.slice(startIndex, startIndex + pageSize);
+  }, [filteredDeals, currentPage, pageSize]);
+
+  // Reset to first page when filtering
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterStatus]);
+
   const totalAssigned = deals.filter(
     (d) =>
       d.handoff &&
@@ -113,7 +128,19 @@ export function HandoffListView() {
       />
 
       {/* 4. Table / List */}
-      <HandoffTable deals={filteredDeals} isLoading={isLoading} />
+      <div className="flex flex-col border border-border rounded-xl bg-card overflow-hidden shadow-xs">
+        <HandoffTable deals={paginatedDeals} isLoading={isLoading} />
+        <DataTablePagination
+          totalItems={filteredDeals.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
     </div>
   );
 }

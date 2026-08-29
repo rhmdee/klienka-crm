@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ClientItem } from "./types";
 import { ClientHeader } from "./client-header";
 import { ClientTable } from "./client-table";
 import { ClientFormDrawer } from "./client-form-drawer";
 import { ClientDeleteAlert } from "./client-delete-alert";
+import { DataTablePagination } from "@/components/ui/data-table-pagination";
 import { useRouter } from "next/navigation";
 
 interface ClientListViewProps {
@@ -17,6 +18,9 @@ export function ClientListView({ initialClients }: ClientListViewProps) {
   const [clients, setClients] = useState<ClientItem[]>(initialClients);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [clientToEdit, setClientToEdit] = useState<ClientItem | null>(null);
@@ -61,6 +65,16 @@ export function ClientListView({ initialClients }: ClientListViewProps) {
     });
   }, [clients, searchQuery]);
 
+  const paginatedClients = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredClients.slice(startIndex, startIndex + pageSize);
+  }, [filteredClients, currentPage, pageSize]);
+
+  // Reset to first page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   const handleOpenAdd = () => {
     setClientToEdit(null);
     setIsFormOpen(true);
@@ -88,12 +102,24 @@ export function ClientListView({ initialClients }: ClientListViewProps) {
       />
 
       {/* Main Table Component */}
-      <ClientTable
-        clients={filteredClients}
-        isLoading={isLoading}
-        onEdit={handleOpenEdit}
-        onDelete={handleOpenDelete}
-      />
+      <div className="flex flex-col border border-border rounded-xl bg-card overflow-hidden shadow-xs">
+        <ClientTable
+          clients={paginatedClients}
+          isLoading={isLoading}
+          onEdit={handleOpenEdit}
+          onDelete={handleOpenDelete}
+        />
+        <DataTablePagination
+          totalItems={filteredClients.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
 
       {/* Drawer Tambah / Edit Data Klien */}
       <ClientFormDrawer

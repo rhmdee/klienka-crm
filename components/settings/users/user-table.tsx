@@ -30,10 +30,9 @@ export function UserTable({
   };
 
   return (
-    <Card className="border-border bg-card overflow-hidden shadow-xs p-0">
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs text-left border-collapse">
-          <thead>
+    <div className="overflow-x-auto w-full">
+      <table className="w-full text-xs text-left border-collapse">
+        <thead>
             <tr className="border-b border-border bg-muted/40 text-muted-foreground font-medium">
               <th className="py-3 px-4">Pengguna</th>
               <th className="py-3 px-4">Peran / Hak Akses</th>
@@ -168,7 +167,6 @@ export function UserTable({
             )}
           </tbody>
         </table>
-      </div>
-    </Card>
+    </div>
   );
 }

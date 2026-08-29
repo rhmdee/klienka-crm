@@ -20,10 +20,9 @@ export function ParamsTable({
   onDelete,
 }: ParamsTableProps) {
   return (
-    <Card className="border-border bg-card overflow-hidden shadow-xs p-0">
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs text-left border-collapse">
-          <thead>
+    <div className="overflow-x-auto w-full">
+      <table className="w-full text-xs text-left border-collapse">
+        <thead>
             <tr className="border-b border-border bg-muted/40 text-muted-foreground font-medium">
               <th className="py-3 px-4 w-1/4">Kunci Parameter (Key)</th>
               <th className="py-3 px-4 w-1/3">Nilai (Value)</th>
@@ -117,7 +116,6 @@ export function ParamsTable({
             )}
           </tbody>
         </table>
-      </div>
-    </Card>
+    </div>
   );
 }
