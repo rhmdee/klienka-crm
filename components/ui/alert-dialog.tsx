@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useSyncExternalStore, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,10 @@ interface AlertDialogProps {
   className?: string;
 }
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function AlertDialog({
   open,
   onOpenChange,
@@ -21,6 +26,12 @@ export function AlertDialog({
   children,
   className,
 }: AlertDialogProps) {
+  const isMounted = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) {
@@ -31,9 +42,9 @@ export function AlertDialog({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, onOpenChange]);
 
-  if (!open) return null;
+  if (!open || !isMounted) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
@@ -74,6 +85,7 @@ export function AlertDialog({
         {/* Content Body */}
         <div>{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

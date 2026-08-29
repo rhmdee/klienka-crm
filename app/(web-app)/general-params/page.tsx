@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import {
   GeneralParamItem,
   ParamsListView,
-} from "@/components/settings/general-params";
+} from "@/components/general-params";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const dynamic = "force-dynamic";

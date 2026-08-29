@@ -62,8 +62,8 @@ function UserFormContent({
     setIsSubmitting(true);
     try {
       const url = isEditMode
-        ? `/api/settings/users/${userToEdit?.id}`
-        : "/api/settings/users";
+        ? `/api/users/${userToEdit?.id}`
+        : "/api/users";
       const method = isEditMode ? "PUT" : "POST";
 
       const res = await fetch(url, {

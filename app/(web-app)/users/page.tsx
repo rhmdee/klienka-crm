@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
-import { UserItem, UserListView } from "@/components/settings/users";
+import { UserItem, UserListView } from "@/components/users";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const dynamic = "force-dynamic";

@@ -67,8 +67,8 @@ function ParamFormContent({
     setIsSubmitting(true);
     try {
       const url = isEditMode
-        ? `/api/settings/general-params/${paramToEdit?.id}`
-        : "/api/settings/general-params";
+        ? `/api/general-params/${paramToEdit?.id}`
+        : "/api/general-params";
       const method = isEditMode ? "PUT" : "POST";
 
       const res = await fetch(url, {

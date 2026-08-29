@@ -16,7 +16,7 @@ const jsonResponse = (data: any, status = 200) => {
   );
 };
 
-// PUT /api/settings/general-params/[id]: Update parameter sistem
+// PUT /api/general-params/[id]: Update parameter sistem
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -94,7 +94,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/settings/general-params/[id]: Hapus parameter sistem
+// DELETE /api/general-params/[id]: Hapus parameter sistem
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },

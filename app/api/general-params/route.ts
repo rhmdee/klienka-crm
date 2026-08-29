@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createUserSchema } from "@/lib/validations/user";
+import { generalParamSchema } from "@/lib/validations/general-param";
 import { checkPermission } from "@/lib/auth-guard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +16,7 @@ const jsonResponse = (data: any, status = 200) => {
   );
 };
 
-// GET /api/settings/users: Ambil seluruh daftar pengguna
+// GET /api/general-params: Ambil seluruh daftar parameter sistem
 export async function GET(req: NextRequest) {
   try {
     const auth = await checkPermission(req, ["ADMINISTRATOR"]);
@@ -24,29 +24,24 @@ export async function GET(req: NextRequest) {
       return auth.response;
     }
 
-    const users = await prisma.user.findMany({
-      include: {
-        _count: {
-          select: { deals: true },
-        },
-      },
-      orderBy: { createdAt: "desc" },
+    const params = await prisma.generalParam.findMany({
+      orderBy: { paramKey: "asc" },
     });
 
     return jsonResponse({
       success: true,
-      data: users,
+      data: params,
     });
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching general params:", error);
     return jsonResponse(
-      { success: false, message: "Gagal memuat data pengguna." },
+      { success: false, message: "Gagal memuat data parameter sistem." },
       500,
     );
   }
 }
 
-// POST /api/settings/users: Tambah pengguna baru
+// POST /api/general-params: Tambah parameter sistem baru
 export async function POST(req: NextRequest) {
   try {
     const auth = await checkPermission(req, ["ADMINISTRATOR"]);
@@ -56,55 +51,55 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    const validationResult = createUserSchema.safeParse(body);
+    const validationResult = generalParamSchema.safeParse(body);
     if (!validationResult.success) {
       return jsonResponse(
         {
           success: false,
-          message: "Validasi data pengguna gagal.",
+          message: "Validasi parameter gagal.",
           errors: validationResult.error.format(),
         },
         400,
       );
     }
 
-    const { name, email, role } = validationResult.data;
+    const { paramKey, paramValue, description } = validationResult.data;
 
-    // Cek apakah email sudah terdaftar
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    // Cek apakah paramKey sudah terdaftar
+    const existingParam = await prisma.generalParam.findUnique({
+      where: { paramKey },
     });
 
-    if (existingUser) {
+    if (existingParam) {
       return jsonResponse(
         {
           success: false,
-          message: "Email sudah digunakan oleh pengguna lain.",
+          message: `Kunci parameter "${paramKey}" sudah ada. Gunakan kunci yang berbeda.`,
         },
         409,
       );
     }
 
-    const newUser = await prisma.user.create({
+    const newParam = await prisma.generalParam.create({
       data: {
-        name,
-        email,
-        role,
+        paramKey,
+        paramValue,
+        description: description || null,
       },
     });
 
     return jsonResponse(
       {
         success: true,
-        message: "Pengguna berhasil ditambahkan.",
-        data: newUser,
+        message: "Parameter sistem berhasil ditambahkan.",
+        data: newParam,
       },
       201,
     );
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error creating general param:", error);
     return jsonResponse(
-      { success: false, message: "Gagal menambahkan pengguna baru." },
+      { success: false, message: "Gagal menambahkan parameter sistem baru." },
       500,
     );
   }
