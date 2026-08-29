@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { clientSchema } from "@/lib/validations/client";
+import { checkPermission } from "@/lib/auth-guard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonResponse = (data: any, status = 200) => {
@@ -43,6 +44,15 @@ export async function GET() {
 // POST /api/clients: Menambahkan klien baru ke database
 export async function POST(req: NextRequest) {
   try {
+    // Role Guard: Hanya ADMIN dan BD yang boleh menambah klien
+    const auth = await checkPermission(req, [
+      "ADMINISTRATOR",
+      "BUSINESS_DEVELOPMENT",
+    ]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const body = await req.json();
 
     const validationResult = clientSchema.safeParse(body);

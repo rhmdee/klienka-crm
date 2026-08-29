@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAvailableOperators } from "@/lib/params";
 import { z } from "zod";
+import { checkPermission } from "@/lib/auth-guard";
 
 // Validasi payload penugasan operator (BR-DAT-01 & BR-DAT-02)
 const updateAssignmentSchema = z.object({
@@ -101,6 +102,15 @@ export async function PATCH(
   { params }: { params: Promise<{ dealId: string }> | { dealId: string } },
 ) {
   try {
+    // Role Guard: Hanya ADMIN dan PROJECT_MANAGER yang boleh menugaskan operator
+    const auth = await checkPermission(req, [
+      "ADMINISTRATOR",
+      "PROJECT_MANAGER",
+    ]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const resolvedParams = await Promise.resolve(params);
     const dealId = resolvedParams.dealId;
 

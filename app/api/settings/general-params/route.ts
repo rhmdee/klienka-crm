@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generalParamSchema } from "@/lib/validations/general-param";
+import { checkPermission } from "@/lib/auth-guard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonResponse = (data: any, status = 200) => {
@@ -16,8 +17,13 @@ const jsonResponse = (data: any, status = 200) => {
 };
 
 // GET /api/settings/general-params: Ambil seluruh daftar parameter sistem
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const auth = await checkPermission(req, ["ADMINISTRATOR"]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const params = await prisma.generalParam.findMany({
       orderBy: { paramKey: "asc" },
     });
@@ -38,6 +44,11 @@ export async function GET() {
 // POST /api/settings/general-params: Tambah parameter sistem baru
 export async function POST(req: NextRequest) {
   try {
+    const auth = await checkPermission(req, ["ADMINISTRATOR"]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const body = await req.json();
 
     const validationResult = generalParamSchema.safeParse(body);

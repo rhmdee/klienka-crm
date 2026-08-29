@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { ROLES, RoleType, UserItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface UserFormDialogProps {
   open: boolean;
@@ -67,7 +68,10 @@ function UserFormContent({
 
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim().toLowerCase(),

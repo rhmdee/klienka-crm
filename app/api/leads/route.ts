@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createLeadSchema } from "@/lib/validations/lead";
+import { checkPermission } from "@/lib/auth-guard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonResponse = (data: any, status = 200) => {
@@ -39,6 +40,15 @@ export async function GET() {
 // POST: Membuat Lead Baru dengan penanganan Client otomatis (BR-PIP-01)
 export async function POST(req: NextRequest) {
   try {
+    // Role Guard: Hanya ADMIN dan BD yang boleh membuat Lead
+    const auth = await checkPermission(req, [
+      "ADMINISTRATOR",
+      "BUSINESS_DEVELOPMENT",
+    ]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const body = await req.json();
 
     const validationResult = createLeadSchema.safeParse(body);

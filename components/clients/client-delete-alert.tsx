@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { AlertTriangle, Layers, Loader2, ShieldAlert, Trash2 } from "lucide-react";
 import { ClientItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface ClientDeleteAlertProps {
   open: boolean;
@@ -43,6 +44,9 @@ function ClientDeleteContent({
     try {
       const res = await fetch(`/api/clients/${clientToDelete.id}`, {
         method: "DELETE",
+        headers: {
+          ...getRoleHeaders(),
+        },
       });
 
       const data = await res.json();

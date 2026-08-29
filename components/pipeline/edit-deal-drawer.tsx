@@ -5,6 +5,7 @@ import { Sheet } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DealItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 import { Save, Loader2 } from "lucide-react";
 
 interface EditDealDrawerProps {
@@ -70,7 +71,10 @@ function EditDealForm({ deal, onCancel, onSuccess }: EditDealFormProps) {
 
       const res = await fetch(`/api/leads/${deal.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify(payload),
       });
 

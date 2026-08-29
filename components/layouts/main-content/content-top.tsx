@@ -6,6 +6,8 @@ import { useContentTopStore } from "@/stores/useMainContentStore";
 import { AutoBreadcrumb } from "@/components/layouts/main-content/auto-breadcrumb";
 import type { ContentTopProps } from "@/types/main-content-types";
 
+import { RoleSwitcher } from "@/components/layouts/header/role-switcher";
+
 export const ContentTop = ({
   className,
   title: propTitle,
@@ -50,11 +52,14 @@ export const ContentTop = ({
         )}
       </div>
 
-      {/* Sisi Kanan: Action Buttons (Searchbox, New Button, dsb) + ThemeToggle */}
-      <div className="flex items-center gap-2.5 shrink-0">
+      {/* Sisi Kanan: Action Buttons + RoleSwitcher + ThemeToggle */}
+      <div className="flex items-center gap-2 shrink-0">
         {activeActions && (
           <div className="flex items-center gap-2">{activeActions}</div>
         )}
+
+        {/* Role Simulator Switcher */}
+        <RoleSwitcher />
 
         {/* Theme Toggle (desktop) */}
         <ThemeToggle className="hidden lg:flex" />

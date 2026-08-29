@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createUserSchema } from "@/lib/validations/user";
+import { checkPermission } from "@/lib/auth-guard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonResponse = (data: any, status = 200) => {
@@ -16,8 +17,13 @@ const jsonResponse = (data: any, status = 200) => {
 };
 
 // GET /api/settings/users: Ambil seluruh daftar pengguna
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const auth = await checkPermission(req, ["ADMINISTRATOR"]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const users = await prisma.user.findMany({
       include: {
         _count: {
@@ -43,6 +49,11 @@ export async function GET() {
 // POST /api/settings/users: Tambah pengguna baru
 export async function POST(req: NextRequest) {
   try {
+    const auth = await checkPermission(req, ["ADMINISTRATOR"]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const body = await req.json();
 
     const validationResult = createUserSchema.safeParse(body);

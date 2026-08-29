@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
 import { GeneralParamItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface ParamDeleteAlertProps {
   open: boolean;
@@ -42,6 +43,9 @@ function ParamDeleteContent({
         `/api/settings/general-params/${paramToDelete.id}`,
         {
           method: "DELETE",
+          headers: {
+            ...getRoleHeaders(),
+          },
         },
       );
 

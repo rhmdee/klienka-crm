@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { Loader2 } from "lucide-react";
 import { ClientItem, LEAD_SOURCE_OPTIONS } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface ClientFormDrawerProps {
   open: boolean;
@@ -79,7 +80,10 @@ function ClientFormContent({
 
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify({
           clientName: clientName.trim(),
           companyName: companyName.trim(),

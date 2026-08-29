@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { clientApprovalSchema } from "@/lib/validations/portal";
+import { checkRateLimit } from "@/lib/rate-limiter";
 
 // Helper aman untuk BigInt
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const jsonResponse = (data: any, status = 200) => {
+const jsonResponse = (data: any, status = 200, headers: Record<string, string> = {}) => {
   return new NextResponse(
     JSON.stringify(data, (_, value) =>
       typeof value === "bigint" ? value.toString() : value,
     ),
     {
       status,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...headers },
     },
   );
 };
@@ -23,6 +24,22 @@ export async function POST(
   try {
     const resolvedParams = await Promise.resolve(params);
     const token = resolvedParams.token;
+
+    // Rate Limiting (US-502): Maksimal 5 permintaan approval/revisi per menit per token/IP
+    const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown-ip";
+    const rateLimitKey = `portal-${token}-${ip}`;
+    const limitResult = checkRateLimit(rateLimitKey, 5, 60000);
+
+    if (limitResult.limited) {
+      return jsonResponse(
+        {
+          success: false,
+          message: `Terlalu banyak permintaan. Silakan tunggu ${limitResult.resetSeconds} detik sebelum mencoba kembali.`,
+        },
+        429,
+        { "Retry-After": limitResult.resetSeconds.toString() },
+      );
+    }
 
     const body = await req.json();
     const validationResult = clientApprovalSchema.safeParse(body);

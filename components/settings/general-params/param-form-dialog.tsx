@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { Loader2, KeyRound } from "lucide-react";
 import { GeneralParamItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface ParamFormDialogProps {
   open: boolean;
@@ -72,7 +73,10 @@ function ParamFormContent({
 
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify({
           paramKey: paramKey.trim(),
           paramValue: paramValue.trim(),

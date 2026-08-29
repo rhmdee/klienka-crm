@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DealItem, DealStage, STAGES } from "../types";
 
+import { useUserRole } from "@/hooks/use-user-role";
+
 interface DealDetailHeaderProps {
   deal: DealItem;
   onUpdateStage: (stage: DealStage) => void;
@@ -21,6 +23,7 @@ export function DealDetailHeader({
   isLoading,
   isUpdating,
 }: DealDetailHeaderProps) {
+  const { canManagePipeline } = useUserRole();
   const currentStageInfo = STAGES.find((s) => s.key === deal.stage);
 
   return (
@@ -62,28 +65,32 @@ export function DealDetailHeader({
             </Button>
           </Link>
         ) : (
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => onUpdateStage("CLOSED_WON")}
-            disabled={isUpdating}
-            className="gap-1.5 cursor-pointer"
-          >
-            <CheckCircle2 className="size-4" />
-            <span>Tandai Won</span>
-          </Button>
-        )}
+          canManagePipeline && (
+            <>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => onUpdateStage("CLOSED_WON")}
+                disabled={isUpdating}
+                className="gap-1.5 cursor-pointer"
+              >
+                <CheckCircle2 className="size-4" />
+                <span>Tandai Won</span>
+              </Button>
 
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() => onUpdateStage("CLOSED_LOST")}
-          disabled={deal.stage === "CLOSED_LOST" || isUpdating}
-          className="gap-1.5 cursor-pointer"
-        >
-          <XCircle className="size-4" />
-          <span>Tandai Lost</span>
-        </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => onUpdateStage("CLOSED_LOST")}
+                disabled={deal.stage === "CLOSED_LOST" || isUpdating}
+                className="gap-1.5 cursor-pointer"
+              >
+                <XCircle className="size-4" />
+                <span>Tandai Lost</span>
+              </Button>
+            </>
+          )
+        )}
 
         <Button
           size="icon-sm"

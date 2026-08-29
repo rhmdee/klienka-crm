@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
+import { getRoleHeaders } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -87,7 +88,10 @@ export function HandoffDetailView({ dealId: propDealId }: HandoffDetailViewProps
       setIsSaving(true);
       const res = await fetch(`/api/handoff/${dealId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify({
           assignedOperator: selectedOperator,
           briefNotes,

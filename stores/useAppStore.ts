@@ -28,6 +28,11 @@ interface AppState {
   // --- User State ---
   currentUser: UserProfile | null;
   setCurrentUser: (user: UserProfile | null) => void;
+
+  // --- Role Simulation State (RBAC Simulator) ---
+  simulatedRole: string | null;
+  setSimulatedRole: (role: string | null) => void;
+  getActiveRole: () => string;
 }
 
 export const useAppStore = create<AppState>()(
@@ -40,6 +45,7 @@ export const useAppStore = create<AppState>()(
       isSidebarOpen: false, // Default closed on mobile
       isSidebarExpand: true, // Default expanded on desktop/lg
       currentUser: null,
+      simulatedRole: null,
 
       // --- Actions: Theme ---
       setTheme: (theme: ThemeMode) => {
@@ -86,9 +92,16 @@ export const useAppStore = create<AppState>()(
         set({ isSidebarOpen: isOpen });
       },
 
-      // --- ACtions: User ---
+      // --- Actions: User & Role Simulation ---
       setCurrentUser: (user: UserProfile | null) => {
         set({ currentUser: user });
+      },
+      setSimulatedRole: (role: string | null) => {
+        set({ simulatedRole: role });
+      },
+      getActiveRole: () => {
+        const state = get();
+        return state.simulatedRole || state.currentUser?.role || "ADMINISTRATOR";
       },
     }),
     {
@@ -97,7 +110,9 @@ export const useAppStore = create<AppState>()(
       partialize: (state) => ({
         theme: state.theme,
         isSidebarExpand: state.isSidebarExpand,
-      }), // Simpan preferensi theme & sidebar expand ke storage
+        simulatedRole: state.simulatedRole,
+      }), // Simpan preferensi theme, sidebar expand & simulatedRole ke storage
     },
   ),
 );
+
