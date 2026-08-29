@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CheckCircle2, XCircle, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,16 +50,29 @@ export function DealDetailHeader({
 
       {/* Action Buttons: Tandai Won, Tandai Lost, Refresh */}
       <div className="flex items-center gap-2 shrink-0">
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => onUpdateStage("CLOSED_WON")}
-          disabled={deal.stage === "CLOSED_WON" || isUpdating}
-          className="gap-1.5 cursor-pointer"
-        >
-          <CheckCircle2 className="size-4" />
-          <span>Tandai Won</span>
-        </Button>
+        {deal.stage === "CLOSED_WON" ? (
+          <Link href={`/handoff/${deal.id}`}>
+            <Button
+              size="sm"
+              variant="default"
+              className="gap-1.5 cursor-pointer bg-success text-success-foreground hover:bg-success/90"
+            >
+              <CheckCircle2 className="size-4" />
+              <span>Buka Handoff Brief</span>
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => onUpdateStage("CLOSED_WON")}
+            disabled={isUpdating}
+            className="gap-1.5 cursor-pointer"
+          >
+            <CheckCircle2 className="size-4" />
+            <span>Tandai Won</span>
+          </Button>
+        )}
 
         <Button
           size="sm"

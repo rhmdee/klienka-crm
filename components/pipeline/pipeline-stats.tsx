@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Briefcase, DollarSign, CheckCircle2, TrendingUp } from "lucide-react";
 import { DealItem, formatIDR } from "./types";
 
 interface PipelineStatsProps {
@@ -36,65 +35,87 @@ export function PipelineStats({ deals }: PipelineStatsProps) {
   }, [deals]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-      <Card className="p-4 bg-background border-border">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-muted-foreground">
-            Total Prospek
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* 1. Total Prospek */}
+      <Card className="p-4 sm:p-5 bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-4">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col items-start">
+            <span className="text-sm font-semibold text-foreground">
+              Total Prospek
+            </span>
+            <span className="text-xs text-muted-foreground text-right">
+              {stats.activeCount} prospek aktif
+            </span>
+          </div>
+          <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            +{stats.totalDeals}
           </span>
-          <Briefcase className="size-4 text-muted-foreground" />
         </div>
-        <div className="text-2xl font-bold text-foreground mt-2">
+        <span className="text-2xl font-extrabold tracking-tight text-foreground">
           {stats.totalDeals}
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          {stats.activeCount} prospek aktif berjalan
-        </p>
+        </span>
       </Card>
 
-      <Card className="p-4 bg-background border-border">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-muted-foreground">
-            Nilai Pipeline Aktif
+      {/* 2. Nilai Pipeline Aktif */}
+      <Card className="p-4 sm:p-5 bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-4">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col items-start">
+            <span className="text-sm font-semibold text-foreground">
+              Nilai Pipeline
+            </span>
+            <span className="text-xs text-muted-foreground text-right">
+              Estimasi berjalan
+            </span>
+          </div>
+          <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            Aktif
           </span>
-          <DollarSign className="size-4 text-primary" />
         </div>
-        <div className="text-2xl font-bold text-primary mt-2">
+        <span className="text-2xl font-extrabold tracking-tight text-primary whitespace-nowrap">
           {formatIDR(stats.totalActiveValue)}
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          Total estimasi prospek aktif
-        </p>
+        </span>
       </Card>
 
-      <Card className="p-4 bg-background border-border">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-muted-foreground">
-            Closed Won
+      {/* 3. Closed Won */}
+      <Card className="p-4 sm:p-5 bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-4">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col items-start">
+            <span className="text-sm font-semibold text-foreground">
+              Closed Won
+            </span>
+            <span className="text-xs text-muted-foreground text-right">
+              {stats.wonCount} deal menang
+            </span>
+          </div>
+          <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success/15 text-success border border-success/30">
+            +{stats.wonCount}
           </span>
-          <CheckCircle2 className="size-4 text-secondary" />
         </div>
-        <div className="text-xl font-bold text-foreground mt-2">
+        <span className="text-2xl font-extrabold tracking-tight text-foreground whitespace-nowrap">
           {formatIDR(stats.wonValue)}
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          {stats.wonCount} deal berhasil dimenangkan
-        </p>
+        </span>
       </Card>
 
-      <Card className="p-4 bg-background border-border">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-muted-foreground">
-            Win Rate
+      {/* 4. Win Rate */}
+      <Card className="p-4 sm:p-5 bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-4">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col items-start">
+            <span className="text-sm font-semibold text-foreground">
+              Win Rate
+            </span>
+            <span className="text-xs text-muted-foreground text-right">
+              Rasio deal berhasil
+            </span>
+          </div>
+          <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success/15 text-success border border-success/30">
+            Rate
           </span>
-          <TrendingUp className="size-4 text-primary" />
         </div>
-        <div className="text-2xl font-bold text-foreground mt-2">
+        <span className="text-2xl font-extrabold tracking-tight text-foreground">
           {stats.totalDeals > 0
             ? `${Math.round((stats.wonCount / stats.totalDeals) * 100)}%`
             : "0%"}
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">Rasio deal berhasil</p>
+        </span>
       </Card>
     </div>
   );
@@ -102,15 +123,20 @@ export function PipelineStats({ deals }: PipelineStatsProps) {
 
 export function PipelineStatsSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 animate-in fade-in duration-300">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 animate-in fade-in duration-300">
       {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="p-4 bg-background border-border flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <Skeleton className="h-3.5 w-24 rounded-md" />
-            <Skeleton className="size-4 rounded-md" />
+        <Card
+          key={i}
+          className="p-4 sm:p-5 bg-card border-border rounded-2xl flex flex-col justify-between gap-4"
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col items-start gap-1">
+              <Skeleton className="h-4 w-24 rounded-md" />
+              <Skeleton className="h-3 w-28 rounded-md" />
+            </div>
+            <Skeleton className="h-5 w-10 rounded-full" />
           </div>
-          <Skeleton className="h-7 w-32 rounded-md mt-1" />
-          <Skeleton className="h-3 w-36 rounded-md" />
+          <Skeleton className="h-8 w-24 rounded-md" />
         </Card>
       ))}
     </div>
