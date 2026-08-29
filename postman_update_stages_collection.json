@@ -1,0 +1,125 @@
+{
+  "info": {
+    "name": "Klienka CRM - Stage Transitions",
+    "_postman_id": "a91e5c20-7b32-4e89-9a2e-48a1c9e9e222",
+    "description": "Koleksi Postman untuk mengupdate stage lead melalui endpoint PATCH /api/leads/[id]/stage",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Move to DISCOVERY_CALL (PT Sinar Abadi)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stage\": \"DISCOVERY_CALL\",\n  \"estimatedBudget\": 140000000,\n  \"techStack\": [\"React\", \"Node.js\", \"Supabase\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads/b0a7f7b5-7ab8-4dd1-add7-c6359c495601/stage",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads", "b0a7f7b5-7ab8-4dd1-add7-c6359c495601", "stage"]
+        }
+      }
+    },
+    {
+      "name": "2. Move to SOW_ESTIMATION (CV Mega Finansia)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stage\": \"SOW_ESTIMATION\",\n  \"estimatedBudget\": 95000000,\n  \"techStack\": [\"Vue.js\", \"Tailwind CSS\", \"Go\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads/5cbac8f9-7215-4b6d-83b1-b227459c8d18/stage",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads", "5cbac8f9-7215-4b6d-83b1-b227459c8d18", "stage"]
+        }
+      }
+    },
+    {
+      "name": "3. Move to NEGOTIATION (PT Agro Prima)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stage\": \"NEGOTIATION\",\n  \"estimatedBudget\": 180000000,\n  \"techStack\": [\"Next.js\", \"Prisma\", \"PostgreSQL\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads/188b3cc4-5b1a-4b2b-a366-36a171c01cf3/stage",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads", "188b3cc4-5b1a-4b2b-a366-36a171c01cf3", "stage"]
+        }
+      }
+    },
+    {
+      "name": "4. Move to CLOSED_WON (Klinik Sehat Bersama)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stage\": \"CLOSED_WON\",\n  \"estimatedBudget\": 65000000,\n  \"techStack\": [\"Flutter\", \"FastAPI\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads/c900331f-ec5a-4987-b9df-a331cc5ea4b3/stage",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads", "c900331f-ec5a-4987-b9df-a331cc5ea4b3", "stage"]
+        }
+      }
+    },
+    {
+      "name": "5. Move to CLOSED_LOST (PT Logistik Cepat)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stage\": \"CLOSED_LOST\",\n  \"lossReason\": \"Klien memilih solusi in-house\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads/2417430e-a0ac-48f2-b73a-93ed95415c29/stage",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads", "2417430e-a0ac-48f2-b73a-93ed95415c29", "stage"]
+        }
+      }
+    }
+  ]
+}

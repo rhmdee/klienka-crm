@@ -1,0 +1,226 @@
+{
+  "info": {
+    "name": "Klienka CRM - Dummy Leads Ingestion",
+    "_postman_id": "8f5a11c0-2e45-4bb6-a67b-23a1a9e9e111",
+    "description": "Koleksi Postman untuk membuat dummy leads melalui API CRM Klienka",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Lead - PT Digital Kreasi Mandiri",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientName\": \"Rian Putra\",\n  \"companyName\": \"PT Digital Kreasi Mandiri\",\n  \"contactEmail\": \"rian@digitalkreasi.co.id\",\n  \"estimatedBudget\": 85000000,\n  \"techStack\": [\"Next.js\", \"TypeScript\", \"PostgreSQL\"],\n  \"userId\": \"0d4e7ffb-4dc0-443a-b1d5-9e0860640d16\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads"]
+        }
+      }
+    },
+    {
+      "name": "2. Create Lead - PT Sinar Abadi Solusindo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientName\": \"Dewi Lestari\",\n  \"companyName\": \"PT Sinar Abadi Solusindo\",\n  \"contactEmail\": \"dewi@sinarabadi.com\",\n  \"estimatedBudget\": 140000000,\n  \"techStack\": [\"React\", \"Node.js\", \"Supabase\"],\n  \"userId\": \"0d4e7ffb-4dc0-443a-b1d5-9e0860640d16\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads"]
+        }
+      }
+    },
+    {
+      "name": "3. Create Lead - CV Mega Finansia Utama",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientName\": \"Ahmad Fauzi\",\n  \"companyName\": \"CV Mega Finansia Utama\",\n  \"contactEmail\": \"fauzi@megafinansia.id\",\n  \"estimatedBudget\": 95000000,\n  \"techStack\": [\"Vue.js\", \"Tailwind CSS\", \"Go\"],\n  \"userId\": \"0d4e7ffb-4dc0-443a-b1d5-9e0860640d16\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads"]
+        }
+      }
+    },
+    {
+      "name": "4. Create Lead - PT Agro Prima Lestari",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientName\": \"Citra Kirana\",\n  \"companyName\": \"PT Agro Prima Lestari\",\n  \"contactEmail\": \"citra@agroprima.com\",\n  \"estimatedBudget\": 180000000,\n  \"techStack\": [\"Next.js\", \"Prisma\", \"PostgreSQL\"],\n  \"userId\": \"0d4e7ffb-4dc0-443a-b1d5-9e0860640d16\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads"]
+        }
+      }
+    },
+    {
+      "name": "5. Create Lead - Klinik Sehat Bersama",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientName\": \"dr. Gunawan\",\n  \"companyName\": \"Klinik Sehat Bersama\",\n  \"contactEmail\": \"gunawan@sehatbersama.co.id\",\n  \"estimatedBudget\": 65000000,\n  \"techStack\": [\"Flutter\", \"FastAPI\"],\n  \"userId\": \"0d4e7ffb-4dc0-443a-b1d5-9e0860640d16\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads"]
+        }
+      }
+    },
+    {
+      "name": "6. Create Lead - PT Logistik Cepat Nusantara",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientName\": \"Ferry Salim\",\n  \"companyName\": \"PT Logistik Cepat Nusantara\",\n  \"contactEmail\": \"ferry@logistikcepat.id\",\n  \"estimatedBudget\": 210000000,\n  \"techStack\": [\"Next.js\", \"Tailwind CSS\", \"Redis\"],\n  \"userId\": \"0d4e7ffb-4dc0-443a-b1d5-9e0860640d16\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leads"]
+        }
+      }
+    }
+  ]
+}

@@ -15,6 +15,17 @@
   --color-chart-1: var(--chart-1);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-on-destructive: var(--on-destructive);
+  --color-border-destructive: var(--border-destructive);
+  --color-info: var(--info);
+  --color-on-info: var(--on-info);
+  --color-border-info: var(--border-info);
+  --color-warning: var(--warning);
+  --color-on-warning: var(--on-warning);
+  --color-border-warning: var(--border-warning);
+  --color-success: var(--success);
+  --color-on-success: var(--on-success);
+  --color-border-success: var(--border-success);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -27,6 +38,8 @@
   --color-popover: var(--background);
   --color-card-foreground: var(--foreground);
   --color-card: var(--background);
+  --color-scrollbar-track: var(--scrollbar-track);
+  --color-scrollbar-thumb: var(--scrollbar-thumb);
 
   /* Radius */
   --radius-sm: calc(var(--radius) * 0.6);
@@ -56,7 +69,20 @@
   --accent: var(--color-neutral-100);
   --accent-foreground: var(--color-neutral-700);
   --destructive: var(--color-red-600);
+  --on-destructive: var(--color-red-50);
+  --border-destructive: var(--color-red-200);
+  --info: var(--color-blue-600);
+  --on-info: var(--color-blue-50);
+  --border-info: var(--color-blue-200);
+  --warning: var(--color-orange-600);
+  --on-warning: var(--color-orange-50);
+  --border-warning: var(--color-orange-200);
+  --success: var(--color-green-600);
+  --on-success: var(--color-green-50);
+  --border-success: var(--color-green-200);
   --border: var(--color-neutral-200);
+  --scrollbar-track: var(--color-neutral-100);
+  --scrollbar-thumb: var(--color-neutral-300);
   --chart-1: var(--color-lime-200);
   --chart-2: var(--color-pink-200);
   --chart-3: var(--color-stone-300);
@@ -73,14 +99,27 @@
   --foreground: var(--color-white);
   --primary: var(--color-blue-900);
   --primary-foreground: var(--color-blue-100);
-  --secondary: var(--color-green-900);
+  --secondary: var(--color-green-800);
   --secondary-foreground: var(--color-green-100);
   --muted: var(--color-neutral-800);
   --muted-foreground: var(--color-neutral-400);
   --accent: var(--color-neutral-900);
   --accent-foreground: var(--color-neutral-300);
   --destructive: var(--color-red-700);
+  --on-destructive: var(--color-red-100);
+  --border-destructive: var(--color-red-400);
+  --info: var(--color-blue-700);
+  --on-info: var(--color-blue-100);
+  --border-info: var(--color-blue-400);
+  --warning: var(--color-orange-700);
+  --on-warning: var(--color-orange-100);
+  --border-warning: var(--color-orange-400);
+  --success: var(--color-green-700);
+  --on-success: var(--color-green-100);
+  --border-success: var(--color-green-400);
   --border: var(--color-neutral-800);
+  --scrollbar-track: var(--color-neutral-800);
+  --scrollbar-thumb: var(--color-neutral-700);
   --chart-1: var(--color-lime-700);
   --chart-2: var(--color-pink-700);
   --chart-3: var(--color-stone-700);
@@ -92,11 +131,29 @@
   * {
     @apply p-0 m-0 box-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-1 h-0.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-scrollbar-track;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-scrollbar-thumb rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-scrollbar-thumb/90;
   }
 }
 
