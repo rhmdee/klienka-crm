@@ -118,7 +118,7 @@ export function PipelineListView({
                               {/* Prospek Title */}
                               <td className="py-3 px-4 font-medium text-foreground">
                                 <Link
-                                  href={`/pipeline/detail?id=${deal.id}`}
+                                  href={`/pipeline/${deal.id}`}
                                   className="hover:text-primary transition-colors block"
                                 >
                                   {deal.title}
@@ -194,7 +194,7 @@ export function PipelineListView({
                                     </DropdownMenuContent>
                                   </DropdownMenu>
 
-                                  <Link href={`/pipeline/detail?id=${deal.id}`}>
+                                  <Link href={`/pipeline/${deal.id}`}>
                                     <Button
                                       size="sm"
                                       variant="ghost"

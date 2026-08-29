@@ -67,7 +67,7 @@ export function DealCard({ deal, onMoveStage, isUpdating }: DealCardProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <Link
-              href={`/pipeline/detail?id=${deal.id}`}
+              href={`/pipeline/${deal.id}`}
               className="flex items-center justify-between text-xs px-2 py-1.5 rounded-sm hover:bg-muted text-primary transition-colors cursor-pointer"
             >
               <span>Lihat Detail</span>

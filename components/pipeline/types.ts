@@ -53,6 +53,9 @@ export interface DealItem {
     version: number;
     status: string;
     totalCost: number | string;
+    marginPercentage?: number;
+    magicLinkToken?: string | null;
+    tokenExpiresAt?: string | null;
   }>;
   createdAt: string;
   updatedAt?: string;

@@ -6,7 +6,30 @@ import { ChevronRight, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BreadcrumbItem } from "@/types/main-content-types";
 
-function formatSegmentLabel(segment: string) {
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function isIdSegment(segment: string) {
+  return UUID_REGEX.test(segment) || (segment.length >= 20 && !segment.includes(" "));
+}
+
+function formatSegmentLabel(segment: string, prevSegment?: string) {
+  // Jika segmen berupa UUID / Hash ID, ubah ke label yang informatif dan ramah pengguna
+  if (isIdSegment(segment)) {
+    const prev = prevSegment?.toLowerCase();
+    if (prev === "pipeline") return "Detail Prospek";
+    if (prev === "leads") return "Detail Lead";
+    if (prev === "sow") return "Detail SOW";
+    return "Detail";
+  }
+
+  // Label khusus untuk kata kunci sistem
+  const lower = segment.toLowerCase();
+  if (lower === "sow") return "SOW Estimator";
+  if (lower === "pipeline") return "Pipeline";
+  if (lower === "leads") return "Leads";
+  if (lower === "dashboard") return "Dashboard";
+
   return decodeURIComponent(segment)
     .replace(/[-_]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
@@ -97,7 +120,8 @@ export function AutoBreadcrumb({
       {segments.map((segment, index) => {
         const href = `/${segments.slice(0, index + 1).join("/")}`;
         const isLast = index === segments.length - 1;
-        const label = formatSegmentLabel(segment);
+        const prevSegment = index > 0 ? segments[index - 1] : undefined;
+        const label = formatSegmentLabel(segment, prevSegment);
 
         return (
           <div key={href} className="flex items-center gap-1.5">

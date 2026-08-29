@@ -1,16 +1,14 @@
-import * as React from "react";
-import { DealDetailView } from "@/components/pipeline";
+import { redirect } from "next/navigation";
 
-export default function PipelineDetailPage() {
-  return (
-    <React.Suspense
-      fallback={
-        <div className="p-8 text-center text-sm text-muted-foreground">
-          Memuat detail prospek...
-        </div>
-      }
-    >
-      <DealDetailView />
-    </React.Suspense>
-  );
+export default async function LegacyPipelineDetailPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>;
+}) {
+  const params = await searchParams;
+  if (params?.id) {
+    redirect(`/pipeline/${params.id}`);
+  } else {
+    redirect("/pipeline");
+  }
 }

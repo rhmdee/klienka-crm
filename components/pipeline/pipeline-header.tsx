@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Search, RefreshCw, Layers, List } from "lucide-react";
+import { Search, RefreshCw, Layers, List, Plus } from "lucide-react";
 import { STAGES } from "./types";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,7 @@ interface PipelineHeaderProps {
   viewMode: "kanban" | "list";
   onViewModeChange: (mode: "kanban" | "list") => void;
   onRefresh: () => void;
+  onOpenCreateLead: () => void;
   isLoading: boolean;
 }
 
@@ -24,19 +25,30 @@ export function PipelineHeader({
   viewMode,
   onViewModeChange,
   onRefresh,
+  onOpenCreateLead,
   isLoading,
 }: PipelineHeaderProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Top Title Bar */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Pipeline Management
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Lacak dan kelola prospek bisnis (Leads & Deals) dari tahap awal
-          hingga penutupan.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">
+            Pipeline Management
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Lacak dan kelola prospek bisnis (Leads & Deals) dari tahap awal
+            hingga penutupan.
+          </p>
+        </div>
+
+        <Button
+          onClick={onOpenCreateLead}
+          className="gap-1.5 cursor-pointer h-9 shrink-0 self-start sm:self-auto"
+        >
+          <Plus className="size-4" />
+          <span>Tambah Lead</span>
+        </Button>
       </div>
 
       {/* Controls Bar: Switch View Mode -> Search -> Filter Stage -> Refresh */}

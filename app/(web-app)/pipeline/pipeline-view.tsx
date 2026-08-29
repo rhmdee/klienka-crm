@@ -12,6 +12,7 @@ import {
   PipelineListView,
   PipelineListViewSkeleton,
 } from "@/components/pipeline";
+import { CreateLeadDrawer } from "@/components/pipeline/create-lead-drawer";
 import { toast } from "@/components/ui/sonner";
 
 export function PipelineView() {
@@ -21,6 +22,7 @@ export function PipelineView() {
   const [updatingDealId, setUpdatingDealId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStage, setFilterStage] = useState<string>("ALL");
+  const [isCreateLeadOpen, setIsCreateLeadOpen] = useState<boolean>(false);
 
   // Fetch leads data from API
   const fetchDeals = useCallback(async () => {
@@ -161,6 +163,7 @@ export function PipelineView() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onRefresh={fetchDeals}
+        onOpenCreateLead={() => setIsCreateLeadOpen(true)}
         isLoading={isLoading}
       />
 
@@ -187,6 +190,15 @@ export function PipelineView() {
           updatingDealId={updatingDealId}
         />
       )}
+
+      {/* Create Lead Drawer */}
+      <CreateLeadDrawer
+        open={isCreateLeadOpen}
+        onOpenChange={setIsCreateLeadOpen}
+        onSuccess={(newDeal) => {
+          setDeals((prev) => [newDeal, ...prev]);
+        }}
+      />
     </div>
   );
 }
