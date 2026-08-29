@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { updateUserSchema } from "@/lib/validations/user";
 import { checkPermission } from "@/lib/auth-guard";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonResponse = (data: any, status = 200) => {
@@ -16,7 +17,7 @@ const jsonResponse = (data: any, status = 200) => {
   );
 };
 
-// PUT /api/settings/users/[id]: Update pengguna
+// PUT /api/users/[id]: Update pengguna
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -110,7 +111,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/settings/users/[id]: Hapus pengguna
+// DELETE /api/users/[id]: Hapus pengguna
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -170,9 +171,16 @@ export async function DELETE(
       where: { id },
     });
 
+    // Hapus juga akun autentikasi dari Supabase Auth
+    try {
+      await supabaseAdmin.auth.admin.deleteUser(id);
+    } catch (authErr) {
+      console.warn("Peringatan: Gagal menghapus user dari Supabase Auth:", authErr);
+    }
+
     return jsonResponse({
       success: true,
-      message: "Pengguna berhasil dihapus.",
+      message: "Pengguna berhasil dihapus dari sistem dan autentikasi.",
     });
   } catch (error) {
     console.error("Error deleting user:", error);

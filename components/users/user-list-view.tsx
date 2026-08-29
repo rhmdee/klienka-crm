@@ -6,6 +6,7 @@ import { UserHeader } from "./user-header";
 import { UserTable } from "./user-table";
 import { UserFormDialog } from "./user-form-dialog";
 import { UserDeleteAlert } from "./user-delete-alert";
+import { UserResetPasswordAlert } from "./user-reset-password-alert";
 import { DataTablePagination } from "@/components/ui/data-table-pagination";
 import { useRouter } from "next/navigation";
 
@@ -29,10 +30,14 @@ export function UserListView({ initialUsers }: UserListViewProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<UserItem | null>(null);
 
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [userToResetPassword, setUserToResetPassword] =
+    useState<UserItem | null>(null);
+
   const handleRefreshData = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/settings/users");
+      const res = await fetch("/api/users");
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setUsers(data.data);
@@ -78,6 +83,11 @@ export function UserListView({ initialUsers }: UserListViewProps) {
     setIsDeleteOpen(true);
   };
 
+  const handleOpenResetPassword = (user: UserItem) => {
+    setUserToResetPassword(user);
+    setIsResetPasswordOpen(true);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* Header Module with Pipeline Layout */}
@@ -104,6 +114,7 @@ export function UserListView({ initialUsers }: UserListViewProps) {
           isLoading={isLoading}
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
+          onResetPassword={handleOpenResetPassword}
         />
         <DataTablePagination
           totalItems={filteredUsers.length}
@@ -131,6 +142,13 @@ export function UserListView({ initialUsers }: UserListViewProps) {
         onOpenChange={setIsDeleteOpen}
         userToDelete={userToDelete}
         onSuccess={handleRefreshData}
+      />
+
+      {/* Modal Konfirmasi Reset Password */}
+      <UserResetPasswordAlert
+        open={isResetPasswordOpen}
+        onOpenChange={setIsResetPasswordOpen}
+        user={userToResetPassword}
       />
     </div>
   );

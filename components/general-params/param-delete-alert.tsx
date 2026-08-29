@@ -6,31 +6,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
-import { UserItem } from "./types";
+import { GeneralParamItem } from "./types";
 import { getRoleHeaders } from "@/lib/api-client";
 
-interface UserDeleteAlertProps {
+interface ParamDeleteAlertProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  userToDelete: UserItem | null;
+  paramToDelete: GeneralParamItem | null;
   onSuccess: () => void;
 }
 
-interface UserDeleteContentProps {
-  userToDelete: UserItem;
+interface ParamDeleteContentProps {
+  paramToDelete: GeneralParamItem;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-function UserDeleteContent({
-  userToDelete,
+function ParamDeleteContent({
+  paramToDelete,
   onClose,
   onSuccess,
-}: UserDeleteContentProps) {
+}: ParamDeleteContentProps) {
   const [confirmInput, setConfirmInput] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const targetConfirmText = userToDelete.name;
+  const targetConfirmText = paramToDelete.paramKey;
   const isMatch = confirmInput.trim() === targetConfirmText.trim();
 
   const handleDelete = async (e: React.FormEvent) => {
@@ -39,26 +39,29 @@ function UserDeleteContent({
 
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/settings/users/${userToDelete.id}`, {
-        method: "DELETE",
-        headers: {
-          ...getRoleHeaders(),
+      const res = await fetch(
+        `/api/general-params/${paramToDelete.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            ...getRoleHeaders(),
+          },
         },
-      });
+      );
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        toast.error(data.message || "Gagal menghapus pengguna.");
+        toast.error(data.message || "Gagal menghapus parameter sistem.");
         return;
       }
 
-      toast.success("Pengguna berhasil dihapus.");
+      toast.success("Parameter sistem berhasil dihapus.");
       onClose();
       onSuccess();
     } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error("Terjadi kesalahan saat menghapus pengguna.");
+      console.error("Error deleting general param:", error);
+      toast.error("Terjadi kesalahan saat menghapus parameter sistem.");
     } finally {
       setIsDeleting(false);
     }
@@ -74,11 +77,11 @@ function UserDeleteContent({
             Tindakan ini tidak dapat dibatalkan
           </span>
           <p className="text-muted-foreground leading-relaxed">
-            Menghapus akun pengguna{" "}
-            <strong className="text-foreground font-semibold">
-              {userToDelete.name}
+            Menghapus kunci parameter{" "}
+            <strong className="text-foreground font-mono font-semibold">
+              {paramToDelete.paramKey}
             </strong>{" "}
-            ({userToDelete.email}) akan mencabut seluruh akses dan menghapus data secara permanen.
+            dapat memengaruhi modul yang bergantung pada nilai ini.
           </p>
         </div>
       </div>
@@ -98,7 +101,7 @@ function UserDeleteContent({
           placeholder={`Ketik "${targetConfirmText}" di sini`}
           disabled={isDeleting}
           autoFocus
-          className="text-xs h-9"
+          className="text-xs h-9 font-mono"
         />
       </div>
 
@@ -127,7 +130,7 @@ function UserDeleteContent({
           ) : (
             <>
               <Trash2 className="size-3.5" />
-              <span>Hapus Pengguna</span>
+              <span>Hapus Parameter</span>
             </>
           )}
         </Button>
@@ -136,24 +139,24 @@ function UserDeleteContent({
   );
 }
 
-export function UserDeleteAlert({
+export function ParamDeleteAlert({
   open,
   onOpenChange,
-  userToDelete,
+  paramToDelete,
   onSuccess,
-}: UserDeleteAlertProps) {
-  if (!userToDelete) return null;
+}: ParamDeleteAlertProps) {
+  if (!paramToDelete) return null;
 
   return (
     <AlertDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Hapus Akun Pengguna"
-      description="Konfirmasi penghapusan permanen akun pengguna dari sistem."
+      title="Hapus Parameter Sistem"
+      description="Konfirmasi penghapusan permanen parameter sistem."
     >
-      <UserDeleteContent
-        key={userToDelete.id}
-        userToDelete={userToDelete}
+      <ParamDeleteContent
+        key={paramToDelete.id}
+        paramToDelete={paramToDelete}
         onClose={() => onOpenChange(false)}
         onSuccess={onSuccess}
       />

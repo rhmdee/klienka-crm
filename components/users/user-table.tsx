@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit2, Mail, Trash2, Users } from "lucide-react";
+import { Edit2, KeyRound, Mail, Trash2, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,6 +11,7 @@ interface UserTableProps {
   isLoading?: boolean;
   onEdit: (user: UserItem) => void;
   onDelete: (user: UserItem) => void;
+  onResetPassword: (user: UserItem) => void;
 }
 
 export function UserTable({
@@ -18,6 +19,7 @@ export function UserTable({
   isLoading = false,
   onEdit,
   onDelete,
+  onResetPassword,
 }: UserTableProps) {
   const getInitials = (name: string) => {
     return name
@@ -140,6 +142,15 @@ export function UserTable({
                     {/* Aksi */}
                     <td data-title="Aksi" className="flex items-center justify-between md:table-cell py-3 px-4 border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0 md:text-right">
                       <div className="inline-flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onResetPassword(user)}
+                          className="size-8 p-0 cursor-pointer text-muted-foreground hover:text-amber-500 bg-muted md:bg-transparent"
+                          title="Reset Password Pengguna"
+                        >
+                          <KeyRound className="size-3.5" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="sm"

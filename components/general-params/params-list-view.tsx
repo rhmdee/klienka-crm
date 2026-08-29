@@ -33,7 +33,7 @@ export function ParamsListView({ initialParams }: ParamsListViewProps) {
   const handleRefreshData = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/settings/general-params");
+      const res = await fetch("/api/general-params");
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setParams(data.data);
