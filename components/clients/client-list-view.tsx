@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { ClientItem } from "./types";
 import { ClientHeader } from "./client-header";
 import { ClientTable } from "./client-table";
@@ -70,11 +70,6 @@ export function ClientListView({ initialClients }: ClientListViewProps) {
     return filteredClients.slice(startIndex, startIndex + pageSize);
   }, [filteredClients, currentPage, pageSize]);
 
-  // Reset to first page when searching
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
   const handleOpenAdd = () => {
     setClientToEdit(null);
     setIsFormOpen(true);
@@ -95,7 +90,10 @@ export function ClientListView({ initialClients }: ClientListViewProps) {
       {/* Header Module with Pipeline, Handoff & User Management Layout */}
       <ClientHeader
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(q) => {
+          setSearchQuery(q);
+          setCurrentPage(1);
+        }}
         onRefresh={handleRefreshData}
         onAddClient={handleOpenAdd}
         isLoading={isLoading}

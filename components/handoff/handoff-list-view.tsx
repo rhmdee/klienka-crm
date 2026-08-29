@@ -95,11 +95,6 @@ export function HandoffListView() {
     return filteredDeals.slice(startIndex, startIndex + pageSize);
   }, [filteredDeals, currentPage, pageSize]);
 
-  // Reset to first page when filtering
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, filterStatus]);
-
   const totalAssigned = deals.filter(
     (d) =>
       d.handoff &&
@@ -119,9 +114,15 @@ export function HandoffListView() {
       {/* 3. Search & Filter Controls */}
       <HandoffFilterControls
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(q) => {
+          setSearchQuery(q);
+          setCurrentPage(1);
+        }}
         filterStatus={filterStatus}
-        onFilterStatusChange={setFilterStatus}
+        onFilterStatusChange={(status) => {
+          setFilterStatus(status);
+          setCurrentPage(1);
+        }}
         totalCount={deals.length}
         pendingCount={totalPending}
         assignedCount={totalAssigned}

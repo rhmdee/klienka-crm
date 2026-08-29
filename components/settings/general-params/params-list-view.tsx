@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { GeneralParamItem } from "./types";
 import { ParamsHeader } from "./params-header";
 import { ParamsTable } from "./params-table";
@@ -63,11 +63,6 @@ export function ParamsListView({ initialParams }: ParamsListViewProps) {
     return filteredParams.slice(startIndex, startIndex + pageSize);
   }, [filteredParams, currentPage, pageSize]);
 
-  // Reset to first page when filtering
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
   const handleOpenAdd = () => {
     setParamToEdit(null);
     setIsFormOpen(true);
@@ -88,7 +83,10 @@ export function ParamsListView({ initialParams }: ParamsListViewProps) {
       {/* Header Module with Pipeline & User Management Layout */}
       <ParamsHeader
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(q) => {
+          setSearchQuery(q);
+          setCurrentPage(1);
+        }}
         onRefresh={handleRefreshData}
         onAddParam={handleOpenAdd}
         isLoading={isLoading}

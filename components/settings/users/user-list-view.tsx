@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { UserItem } from "./types";
 import { UserHeader } from "./user-header";
 import { UserTable } from "./user-table";
@@ -63,11 +63,6 @@ export function UserListView({ initialUsers }: UserListViewProps) {
     return filteredUsers.slice(startIndex, startIndex + pageSize);
   }, [filteredUsers, currentPage, pageSize]);
 
-  // Reset to first page when filtering
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedRoleFilter]);
-
   const handleOpenAdd = () => {
     setUserToEdit(null);
     setIsFormOpen(true);
@@ -88,9 +83,15 @@ export function UserListView({ initialUsers }: UserListViewProps) {
       {/* Header Module with Pipeline Layout */}
       <UserHeader
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(q) => {
+          setSearchQuery(q);
+          setCurrentPage(1);
+        }}
         filterRole={selectedRoleFilter}
-        onFilterRoleChange={setSelectedRoleFilter}
+        onFilterRoleChange={(role) => {
+          setSelectedRoleFilter(role);
+          setCurrentPage(1);
+        }}
         onRefresh={handleRefreshData}
         onAddUser={handleOpenAdd}
         isLoading={isLoading}

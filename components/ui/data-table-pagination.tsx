@@ -55,7 +55,7 @@ export function DataTablePagination({
           totalPages - 3,
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pages.push(
@@ -65,7 +65,7 @@ export function DataTablePagination({
           currentPage,
           currentPage + 1,
           "ellipsis",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -96,12 +96,16 @@ export function DataTablePagination({
               onPageSizeChange(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] text-xs">
+            <SelectTrigger className="h-8 w-17.5 text-xs">
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
               {PAGE_SIZE_OPTIONS.map((size) => (
-                <SelectItem key={size} value={size.toString()} className="text-xs">
+                <SelectItem
+                  key={size}
+                  value={size.toString()}
+                  className="text-xs"
+                >
                   {size}
                 </SelectItem>
               ))}
