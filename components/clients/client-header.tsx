@@ -27,7 +27,8 @@ export function ClientHeader({
             Database Klien & Leads
           </h1>
           <p className="text-sm text-muted-foreground">
-            Kelola direktori kontak klien, profil perusahaan, dan lacak asal sumber prospek.
+            Kelola direktori kontak klien, profil perusahaan, dan lacak asal
+            sumber prospek.
           </p>
         </div>
 
@@ -41,8 +42,8 @@ export function ClientHeader({
       </div>
 
       {/* Controls Bar: Search -> Refresh */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="relative flex-1 max-w-full lg:max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
           <input
             type="text"

@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useUserRole, RoleType, ROLE_LABELS } from "@/hooks/use-user-role";
 import { toast } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 
 interface RoleOption {
   role: RoleType;
@@ -61,7 +62,12 @@ const ROLES: RoleOption[] = [
   },
 ];
 
-export function RoleSwitcher({ className }: { className?: string }) {
+interface RoleSwitcherProps {
+  className?: string;
+  onHeader?: boolean;
+}
+
+export function RoleSwitcher({ className, onHeader }: RoleSwitcherProps) {
   const {
     activeRole,
     roleLabel,
@@ -88,7 +94,11 @@ export function RoleSwitcher({ className }: { className?: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-card hover:bg-muted/60 transition-all text-xs font-medium cursor-pointer outline-none shadow-2xs ${className || ""}`}
+        className={cn(
+          "items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-card hover:bg-muted/60 transition-all text-xs font-medium cursor-pointer outline-none shadow-2xs",
+          className,
+          onHeader ? "hidden lg:inline-flex" : "inline-flex",
+        )}
       >
         <CurrentIcon className={`size-3.5 ${currentOption.color} shrink-0`} />
         <span className="hidden sm:inline text-muted-foreground text-[11px]">

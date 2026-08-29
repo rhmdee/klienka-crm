@@ -43,7 +43,10 @@ export function PipelineHeader({
               Pipeline Management
             </h1>
             {isPM && (
-              <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/20">
+              <Badge
+                variant="outline"
+                className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/20"
+              >
                 Mode Pantau (Read-Only)
               </Badge>
             )}
@@ -67,9 +70,9 @@ export function PipelineHeader({
 
       {/* Controls Bar: Switch View Mode -> Search -> Filter Stage -> Refresh */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1">
+        <div className="flex flex-row items-stretch sm:items-center gap-2.5 flex-1">
           {/* View Mode Toggle Switcher (Sebelum search box) */}
-          <div className="flex items-center bg-muted/60 p-1 rounded-lg border border-border shrink-0">
+          <div className="flex w-max items-center bg-muted/60 p-1 rounded-lg border border-border shrink-0">
             <button
               type="button"
               onClick={() => onViewModeChange("kanban")}
@@ -99,7 +102,7 @@ export function PipelineHeader({
           </div>
 
           {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
             <input
               type="text"

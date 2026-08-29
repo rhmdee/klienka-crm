@@ -92,8 +92,8 @@ export function PipelineListView({
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
+                    <table className="w-full text-left border-collapse block md:table">
+                      <thead className="hidden md:table-header-group">
                         <tr className="border-b border-border text-[11px] font-semibold text-muted-foreground uppercase bg-muted/20">
                           <th className="py-2.5 px-4">Prospek / Proyek</th>
                           <th className="py-2.5 px-4">Klien & Kontak</th>
@@ -104,46 +104,50 @@ export function PipelineListView({
                           <th className="py-2.5 px-4 text-right">Aksi</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-border/60 text-xs">
+                      <tbody className="block p-1.5 lg:p-0 md:table-row-group divide-y md:divide-border/60 text-xs md:divide-y">
                         {stageDeals.map((deal) => {
                           const isUpdating = updatingDealId === deal.id;
 
                           return (
                             <tr
                               key={deal.id}
-                              className={`hover:bg-muted/30 transition-colors ${
+                              className={`hover:bg-muted/30 transition-colors block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none ${
                                 isUpdating
                                   ? "opacity-50 pointer-events-none"
                                   : ""
                               }`}
                             >
                               {/* Prospek Title */}
-                              <td className="py-3 px-4 font-medium text-foreground">
-                                <Link
-                                  href={`/pipeline/${deal.id}`}
-                                  className="hover:text-primary transition-colors block"
-                                >
-                                  {deal.title}
-                                </Link>
-                                <span className="text-[11px] text-muted-foreground">
-                                  PIC: {deal.user?.name || "Tim Klienka"}
-                                </span>
+                              <td data-title="Prospek / Proyek" className="flex items-center justify-between md:table-cell py-3 px-4 font-medium text-foreground border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
+                                <div className="flex flex-col items-end md:items-start text-right md:text-left">
+                                  <Link
+                                    href={`/pipeline/${deal.id}`}
+                                    className="hover:text-primary transition-colors block"
+                                  >
+                                    {deal.title}
+                                  </Link>
+                                  <span className="text-[11px] text-muted-foreground">
+                                    PIC: {deal.user?.name || "Tim Klienka"}
+                                  </span>
+                                </div>
                               </td>
 
                               {/* Client Info */}
-                              <td className="py-3 px-4 text-muted-foreground">
-                                <div className="font-medium text-foreground">
-                                  {deal.client.companyName}
-                                </div>
-                                <div className="text-[11px]">
-                                  {deal.client.clientName} (
-                                  {deal.client.contactEmail || "-"})
+                              <td data-title="Klien & Kontak" className="flex items-center justify-between md:table-cell py-3 px-4 text-muted-foreground border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
+                                <div className="flex flex-col items-end md:items-start text-right md:text-left">
+                                  <div className="font-medium text-foreground">
+                                    {deal.client.companyName}
+                                  </div>
+                                  <div className="text-[11px]">
+                                    {deal.client.clientName} (
+                                    {deal.client.contactEmail || "-"})
+                                  </div>
                                 </div>
                               </td>
 
                               {/* Tech Stack */}
-                              <td className="py-3 px-4">
-                                <div className="flex flex-wrap gap-1 max-w-xs">
+                              <td data-title="Tech Stack" className="flex items-center justify-between md:table-cell py-3 px-4 border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
+                                <div className="flex flex-wrap gap-1 max-w-xs justify-end md:justify-start">
                                   {deal.techStack &&
                                   deal.techStack.length > 0 ? (
                                     deal.techStack.map((tech) => (
@@ -164,12 +168,12 @@ export function PipelineListView({
                               </td>
 
                               {/* Budget */}
-                              <td className="py-3 px-4 text-right font-semibold text-primary">
+                              <td data-title="Estimasi Nilai" className="flex items-center justify-between md:table-cell py-3 px-4 text-right font-semibold text-primary border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                                 {formatIDR(deal.estimatedBudget)}
                               </td>
 
                               {/* Actions */}
-                              <td className="py-3 px-4 text-right">
+                              <td data-title="Aksi" className="flex items-center justify-between md:table-cell py-3 px-4 text-right border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                                 <div className="flex items-center justify-end gap-1.5">
                                   {/* Dropdown Change Stage (Only if canManagePipeline) */}
                                   {canManagePipeline && (

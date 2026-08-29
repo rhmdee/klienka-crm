@@ -35,7 +35,7 @@ export function PipelineStats({ deals }: PipelineStatsProps) {
   }, [deals]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
       {/* 1. Total Prospek */}
       <Card className="p-4 sm:p-5 bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-4">
         <div className="flex items-start justify-between">

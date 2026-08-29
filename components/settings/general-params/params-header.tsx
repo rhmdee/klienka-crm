@@ -27,7 +27,8 @@ export function ParamsHeader({
             Parameter Sistem
           </h1>
           <p className="text-sm text-muted-foreground">
-            Konfigurasi variabel global, daftar operator teknis, dan rate card kalkulator CRM.
+            Konfigurasi variabel global, daftar operator teknis, dan rate card
+            kalkulator CRM.
           </p>
         </div>
 
@@ -41,8 +42,8 @@ export function ParamsHeader({
       </div>
 
       {/* Controls Bar: Search -> Refresh */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="relative flex-1 max-w-full lg:max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
           <input
             type="text"

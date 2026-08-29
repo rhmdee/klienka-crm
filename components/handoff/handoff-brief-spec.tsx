@@ -93,8 +93,8 @@ export function HandoffBriefSpec({ deal }: HandoffBriefSpecProps) {
 
         {approvedSOW && approvedSOW.items && approvedSOW.items.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left border-collapse">
-              <thead>
+            <table className="w-full text-xs text-left border-collapse block md:table">
+              <thead className="hidden md:table-header-group">
                 <tr className="border-b border-border bg-muted/40 text-muted-foreground font-medium">
                   <th className="py-2.5 px-3">Peran Teknis</th>
                   <th className="py-2.5 px-3 text-center">Man-Days</th>
@@ -102,35 +102,35 @@ export function HandoffBriefSpec({ deal }: HandoffBriefSpecProps) {
                   <th className="py-2.5 px-3 text-right">Subtotal</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="block p-1.5 lg:p-0 md:table-row-group divide-y md:divide-border md:divide-y">
                 {approvedSOW.items.map((item) => (
-                  <tr key={item.id} className="hover:bg-muted/20">
-                    <td className="py-2.5 px-3 font-medium text-foreground">
+                  <tr key={item.id} className="hover:bg-muted/20 block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none">
+                    <td data-title="Peran Teknis" className="flex items-center justify-between md:table-cell py-2.5 px-3 font-medium text-foreground border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                       {item.roleName}
                     </td>
-                    <td className="py-2.5 px-3 text-center">
+                    <td data-title="Man-Days" className="flex items-center justify-between md:table-cell py-2.5 px-3 md:text-center border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                       <span className="bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-md">
                         {item.manDays} MD
                       </span>
                     </td>
-                    <td className="py-2.5 px-3 text-right text-muted-foreground">
+                    <td data-title="Tarif Harian" className="flex items-center justify-between md:table-cell py-2.5 px-3 text-right text-muted-foreground border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                       {formatIDR(item.dailyRate)}
                     </td>
-                    <td className="py-2.5 px-3 text-right font-medium text-foreground">
+                    <td data-title="Subtotal" className="flex items-center justify-between md:table-cell py-2.5 px-3 text-right font-medium text-foreground border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                       {formatIDR(item.subtotal)}
                     </td>
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
-                <tr className="border-t border-border bg-muted/20">
+              <tfoot className="block md:table-footer-group mt-2 md:mt-0">
+                <tr className="border border-border md:border-0 md:border-t bg-muted/20 rounded-xl md:rounded-none overflow-hidden block md:table-row">
                   <td
                     colSpan={3}
-                    className="py-2.5 px-3 text-right font-semibold text-muted-foreground"
+                    className="py-2.5 px-3 text-left md:text-right font-semibold text-muted-foreground block md:table-cell border-b border-border/50 md:border-0"
                   >
                     Total Nilai Penawaran (Final Deal):
                   </td>
-                  <td className="py-2.5 px-3 text-right font-bold text-primary text-sm">
+                  <td className="py-2.5 px-3 text-left md:text-right font-bold text-primary text-sm block md:table-cell">
                     {formatIDR(approvedSOW.totalCost)}
                   </td>
                 </tr>

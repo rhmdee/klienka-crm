@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Clock, Truck } from "lucide-react";
+import { ArrowRight, Truck } from "lucide-react";
 import Link from "next/link";
 import { RecentHandoffItem } from "./types";
 
@@ -14,9 +14,9 @@ export function DashboardRecentHandoffs({
   handoffs,
 }: DashboardRecentHandoffsProps) {
   return (
-    <Card className="p-4 sm:p-5 bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-4 h-full">
-      <div className="flex items-center justify-between pb-3 border-b border-border">
-        <div className="flex items-center gap-2">
+    <Card className="bg-card border-border shadow-2xs rounded-2xl flex flex-col justify-between gap-0 h-full p-0">
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center gap-3">
           <div className="p-1.5 bg-success/10 text-success border border-success/20 rounded-lg">
             <Truck className="size-4" />
           </div>
@@ -48,17 +48,17 @@ export function DashboardRecentHandoffs({
             Belum ada proyek serah terima (Closed Won).
           </div>
         ) : (
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground">
-                <th className="py-2 pr-4 font-medium">Proyek / Klien</th>
+          <table className="w-full text-left text-xs border-collapse block md:table">
+            <thead className="hidden md:table-header-group">
+              <tr className="border-b border-border bg-muted/40 text-muted-foreground">
+                <th className="py-2 px-4 font-medium">Proyek / Klien</th>
                 <th className="py-2 px-4 font-medium">PIC Operasional</th>
-                <th className="py-2 pl-4 text-right font-medium">
+                <th className="py-2 px-4 text-right font-medium">
                   Status / Catatan
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="block p-1.5 lg:p-0 md:table-row-group divide-y md:divide-border md:divide-y">
               {handoffs.map((item) => {
                 const isAssigned =
                   item.assignedOperator &&
@@ -67,31 +67,31 @@ export function DashboardRecentHandoffs({
                 return (
                   <tr
                     key={item.id}
-                    className="hover:bg-muted/40 transition-colors"
+                    className="hover:bg-muted/40 transition-colors block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none"
                   >
-                    <td className="py-2.5 pr-4">
-                      <div className="font-semibold text-foreground line-clamp-1">
-                        {item.dealTitle}
-                      </div>
-                      <div className="text-[11px] text-muted-foreground">
-                        {item.companyName}
+                    <td data-title="Proyek / Klien" className="flex items-center justify-between md:table-cell py-2.5 px-4 border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
+                      <div className="flex flex-col items-end md:items-start text-right md:text-left">
+                        <div className="font-semibold text-foreground line-clamp-1">
+                          {item.dealTitle}
+                        </div>
+                        <div className="text-[11px] text-muted-foreground">
+                          {item.companyName}
+                        </div>
                       </div>
                     </td>
-                    <td className="py-2.5 px-4">
+                    <td data-title="PIC Operasional" className="flex items-center justify-between md:table-cell py-2.5 px-4 border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                       {isAssigned ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-success/15 text-success border border-success/30">
-                          <CheckCircle2 className="size-3" />
-                          <span>{item.assignedOperator}</span>
-                        </span>
+                        <div className="font-medium text-foreground line-clamp-1 md:text-left text-right">
+                          {item.assignedOperator}
+                        </div>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-warning/15 text-warning border border-warning/30">
-                          <Clock className="size-3" />
-                          <span>Pending Assignment</span>
-                        </span>
+                        <div className="text-muted-foreground italic line-clamp-1 md:text-left text-right">
+                          Pending Assignment
+                        </div>
                       )}
                     </td>
-                    <td className="py-2.5 pl-4 text-right">
-                      <span className="text-[11px] text-muted-foreground line-clamp-1 max-w-45 ml-auto">
+                    <td data-title="Status / Catatan" className="flex items-center justify-between md:table-cell py-2.5 px-4 md:text-right border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
+                      <span className="text-[11px] text-muted-foreground line-clamp-1 max-w-45 md:ml-auto md:text-right text-right">
                         {item.briefNotes || "Tidak ada catatan spesifik"}
                       </span>
                     </td>

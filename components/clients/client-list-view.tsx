@@ -56,11 +56,7 @@ export function ClientListView({ initialClients }: ClientListViewProps) {
       const sourceMatch = (c.leadSource || "").toLowerCase().includes(q);
 
       return (
-        nameMatch ||
-        companyMatch ||
-        emailMatch ||
-        phoneMatch ||
-        sourceMatch
+        nameMatch || companyMatch || emailMatch || phoneMatch || sourceMatch
       );
     });
   }, [clients, searchQuery]);

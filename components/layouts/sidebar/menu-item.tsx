@@ -21,7 +21,7 @@ export interface MenuItemProps {
 }
 
 export function MenuItem({ href, icon, label, active }: MenuItemProps) {
-  const { isSidebarExpand } = useAppStore();
+  const { isSidebarExpand, isMobile, setSidebarOpen } = useAppStore();
   const pathname = usePathname();
 
   // Auto-detect active route if not explicitly provided
@@ -33,9 +33,16 @@ export function MenuItem({ href, icon, label, active }: MenuItemProps) {
   // Resolve Lucide Icon component dynamically from icon name
   const IconComponent = icons[icon] || HelpCircle;
 
+  const handleClick = () => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
+
   const itemLink = (
     <Link
       href={href}
+      onClick={handleClick}
       className={cn(
         "flex items-center gap-2 h-10 rounded-xl transition-all duration-200 cursor-pointer text-sm font-medium",
         isActive

@@ -20,7 +20,7 @@ export default function Header({ className }: HeaderProps) {
       <AppName onHeader />
 
       <div className="flex items-center gap-2">
-        <RoleSwitcher />
+        <RoleSwitcher onHeader />
         <ThemeToggle />
       </div>
     </header>

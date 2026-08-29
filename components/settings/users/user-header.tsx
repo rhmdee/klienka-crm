@@ -32,7 +32,8 @@ export function UserHeader({
             User Management
           </h1>
           <p className="text-sm text-muted-foreground">
-            Kelola data akun pengguna, peran, dan hak akses (RBAC) pada sistem CRM.
+            Kelola data akun pengguna, peran, dan hak akses (RBAC) pada sistem
+            CRM.
           </p>
         </div>
 
@@ -49,7 +50,7 @@ export function UserHeader({
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1">
           {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 max-w-full lg:max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
             <input
               type="text"

@@ -22,7 +22,7 @@ export default function Sidebar({ className }: SidebarProps) {
       <aside
         className={cn(
           // Base & Mobile (< lg): fixed positioning with translate-x animation
-          "fixed top-2 bottom-2 left-2 z-50 flex flex-col bg-background rounded-2xl border border-border transition-[width,transform] duration-300 ease-in-out overflow-hidden shadow-2xl",
+          "fixed top-2 bottom-2 left-2 z-50 flex flex-col bg-background rounded-2xl border border-border transition-all duration-300 ease-in-out overflow-hidden shadow-2xl",
           "w-72 max-w-[calc(100vw-1rem)]",
           isSidebarOpen ? "translate-x-0" : "-translate-x-[calc(100%+1rem)]",
 

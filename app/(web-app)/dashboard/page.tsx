@@ -16,7 +16,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Dashboard Overview - Klienka CRM",
-  description: "Ringkasan performa penjualan, pipeline aktif, dan serah terima operasional software house.",
+  description:
+    "Ringkasan performa penjualan, pipeline aktif, dan serah terima operasional software house.",
 };
 
 async function getDashboardData() {
@@ -158,7 +159,7 @@ async function DashboardContent() {
       <DashboardStats stats={stats} />
 
       {/* Recent Activity Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2.5">
         <DashboardRecentDeals deals={recentDeals} />
         <DashboardRecentHandoffs handoffs={recentHandoffs} />
       </div>
