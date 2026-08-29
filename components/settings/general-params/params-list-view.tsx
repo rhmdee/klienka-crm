@@ -1,0 +1,108 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { GeneralParamItem } from "./types";
+import { ParamsHeader } from "./params-header";
+import { ParamsTable } from "./params-table";
+import { ParamFormDialog } from "./param-form-dialog";
+import { ParamDeleteAlert } from "./param-delete-alert";
+import { useRouter } from "next/navigation";
+
+interface ParamsListViewProps {
+  initialParams: GeneralParamItem[];
+}
+
+export function ParamsListView({ initialParams }: ParamsListViewProps) {
+  const router = useRouter();
+  const [params, setParams] = useState<GeneralParamItem[]>(initialParams);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [paramToEdit, setParamToEdit] = useState<GeneralParamItem | null>(null);
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [paramToDelete, setParamToDelete] = useState<GeneralParamItem | null>(
+    null,
+  );
+
+  const handleRefreshData = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/settings/general-params");
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        setParams(data.data);
+      }
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to refresh general params list:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredParams = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return params;
+
+    return params.filter((p) => {
+      const keyMatch = p.paramKey.toLowerCase().includes(q);
+      const valMatch = p.paramValue.toLowerCase().includes(q);
+      const descMatch = (p.description || "").toLowerCase().includes(q);
+      return keyMatch || valMatch || descMatch;
+    });
+  }, [params, searchQuery]);
+
+  const handleOpenAdd = () => {
+    setParamToEdit(null);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenEdit = (param: GeneralParamItem) => {
+    setParamToEdit(param);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenDelete = (param: GeneralParamItem) => {
+    setParamToDelete(param);
+    setIsDeleteOpen(true);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Header Module with Pipeline & User Management Layout */}
+      <ParamsHeader
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onRefresh={handleRefreshData}
+        onAddParam={handleOpenAdd}
+        isLoading={isLoading}
+      />
+
+      {/* Main Table Component matching Handoff Table */}
+      <ParamsTable
+        params={filteredParams}
+        isLoading={isLoading}
+        onEdit={handleOpenEdit}
+        onDelete={handleOpenDelete}
+      />
+
+      {/* Modal Dialog Tambah / Edit */}
+      <ParamFormDialog
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        paramToEdit={paramToEdit}
+        onSuccess={handleRefreshData}
+      />
+
+      {/* Modal Konfirmasi Hapus GitHub-Style */}
+      <ParamDeleteAlert
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        paramToDelete={paramToDelete}
+        onSuccess={handleRefreshData}
+      />
+    </div>
+  );
+}

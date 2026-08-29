@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAvailableOperators } from "@/lib/params";
 import { z } from "zod";
 
 // Validasi payload penugasan operator (BR-DAT-01 & BR-DAT-02)
@@ -74,17 +75,15 @@ export async function GET(
       });
     }
 
-    // Ambil daftar parameter sistem untuk opsi pilihan operator operasional
-    const operators = await prisma.generalParam.findMany({
-      where: { paramKey: { startsWith: "DEFAULT_OPERATOR" } },
-    });
+    // Ambil daftar nama operator operasional dari General Parameters
+    const availableOperators = await getAvailableOperators();
 
     return jsonResponse({
       success: true,
       data: {
         deal,
         handoff,
-        availableOperators: operators.map((op) => op.paramValue),
+        availableOperators,
       },
     });
   } catch (error) {

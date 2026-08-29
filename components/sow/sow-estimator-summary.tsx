@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -48,14 +48,11 @@ export function SOWEstimatorSummary({
   selectedClientName,
 }: SOWEstimatorSummaryProps) {
   const [copied, setCopied] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDismissed, setIsDismissed] = useState<string | null>(null);
 
-  // Otomatis buka AlertDialog ketika SOW baru saja berhasil digenerate
-  useEffect(() => {
-    if (generatedSOW) {
-      setIsDialogOpen(true);
-    }
-  }, [generatedSOW]);
+  const isDialogOpen = Boolean(
+    generatedSOW && isDismissed !== (generatedSOW.magicLinkToken || generatedSOW.id)
+  );
 
   // Generate Magic Link full URL
   const magicLinkUrl = generatedSOW
@@ -228,7 +225,7 @@ export function SOWEstimatorSummary({
           <Button
             type="button"
             variant="outline"
-            onClick={() => setIsDialogOpen(true)}
+            onClick={() => setIsDismissed(null)}
             className="w-full h-8 text-xs gap-1.5 text-success border-success/30 hover:bg-success/10 cursor-pointer"
           >
             <CheckCircle2 className="size-3.5 text-success" />
@@ -240,7 +237,11 @@ export function SOWEstimatorSummary({
       {/* Alert-Dialog Modal: Hasil Generate Magic Link di Tengah Layar (Focal Point) */}
       <AlertDialog
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsDismissed(generatedSOW?.magicLinkToken || generatedSOW?.id || "dismissed");
+          }
+        }}
         title="SOW Proposal Berhasil Dibuat!"
         description="Dokumen SOW telah disimpan dan status deal dimutasi ke tahap Negosiasi. Bagikan Magic Link berikut kepada klien untuk ditinjau."
       >
@@ -326,7 +327,11 @@ export function SOWEstimatorSummary({
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setIsDialogOpen(false)}
+              onClick={() =>
+                setIsDismissed(
+                  generatedSOW?.magicLinkToken || generatedSOW?.id || "dismissed",
+                )
+              }
               className="text-xs text-muted-foreground hover:text-foreground cursor-pointer"
             >
               Tutup
