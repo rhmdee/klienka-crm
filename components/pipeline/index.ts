@@ -7,4 +7,5 @@ export * from "./kanban-board";
 export * from "./pipeline-list-view";
 export * from "./deal-detail-view";
 export * from "./edit-deal-drawer";
+export * from "./create-lead-drawer";
 export * from "./detail";

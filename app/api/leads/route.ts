@@ -57,6 +57,8 @@ export async function POST(req: NextRequest) {
       clientName,
       companyName,
       contactEmail,
+      contactPhone,
+      leadSource,
       estimatedBudget,
       techStack,
       userId,
@@ -77,10 +79,29 @@ export async function POST(req: NextRequest) {
             clientName,
             companyName,
             contactEmail,
+            contactPhone,
+            leadSource: leadSource || "Website Inquiry",
           },
         });
       }
       targetClientId = client.id;
+    }
+
+    let targetUserId = userId;
+    if (!targetUserId) {
+      const defaultUser = await prisma.user.findFirst();
+      if (defaultUser) {
+        targetUserId = defaultUser.id;
+      } else {
+        const newUser = await prisma.user.create({
+          data: {
+            name: "Business Development",
+            email: "bd@klienka.com",
+            role: "BUSINESS_DEVELOPMENT",
+          },
+        });
+        targetUserId = newUser.id;
+      }
     }
 
     // Buat Deal baru dengan tahap default INQUIRY (BR-PIP-01)
@@ -90,7 +111,7 @@ export async function POST(req: NextRequest) {
         stage: "INQUIRY",
         estimatedBudget,
         techStack,
-        userId,
+        userId: targetUserId,
         clientId: targetClientId,
       },
       include: {

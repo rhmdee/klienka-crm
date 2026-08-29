@@ -18,7 +18,7 @@ export const createLeadSchema = z.object({
     .or(z.number().transform((val) => BigInt(val)))
     .default(BigInt(0)),
   techStack: z.array(z.string()).default([]),
-  userId: z.string().uuid({ message: "User ID penanggung jawab tidak valid." }),
+  userId: z.string().uuid({ message: "User ID penanggung jawab tidak valid." }).optional(),
   clientId: z.string().uuid().optional(),
 });
 

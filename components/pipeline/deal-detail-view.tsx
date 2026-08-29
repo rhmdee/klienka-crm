@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 import Link from "next/link";
 import { AlertCircle, Layers, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,9 +25,18 @@ import {
   STAGES,
 } from "./types";
 
-export function DealDetailView() {
+interface DealDetailViewProps {
+  dealId?: string;
+}
+
+export function DealDetailView({ dealId: propDealId }: DealDetailViewProps = {}) {
   const searchParams = useSearchParams();
-  const dealId = searchParams.get("id");
+  const routeParams = useParams();
+  
+  const dealId =
+    propDealId ||
+    (typeof routeParams?.id === "string" ? routeParams.id : "") ||
+    searchParams.get("id");
 
   const [deal, setDeal] = useState<DealItem | null>(null);
   const [activities, setActivities] = useState<DealActivityItem[]>([]);
