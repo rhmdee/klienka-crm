@@ -27,26 +27,42 @@ model Client {
   clientName   String
   companyName  String
   contactEmail String   @unique
+  contactPhone String?
+  leadSource   String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   deals        Deal[]
 }
 
 model Deal {
-  id              String    @id @default(uuid())
+  id              String         @id @default(uuid())
   title           String
-  stage           DealStage @default(INQUIRY)
-  estimatedBudget BigInt    @default(0)
+  description     String?
+  stage           DealStage      @default(INQUIRY)
+  estimatedBudget BigInt         @default(0)
   techStack       String[]
   lossReason      String?
   userId          String
-  user            User      @relation(fields: [userId], references: [id])
+  user            User           @relation(fields: [userId], references: [id])
   clientId        String
-  client          Client    @relation(fields: [clientId], references: [id])
+  client          Client         @relation(fields: [clientId], references: [id])
   sows            SOW[]
   handoff         Handoff?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  activities      DealActivity[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model DealActivity {
+  id          String       @id @default(uuid())
+  dealId      String
+  deal        Deal         @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  type        ActivityType
+  title       String
+  description String
+  actorName   String       @default("Sistem")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model SOW {
@@ -105,6 +121,14 @@ enum DealStage {
   NEGOTIATION
   CLOSED_WON
   CLOSED_LOST
+}
+
+enum ActivityType {
+  EMAIL
+  CALL
+  MEETING
+  NOTE
+  STAGE_CHANGE
 }
 
 enum SOWStatus {

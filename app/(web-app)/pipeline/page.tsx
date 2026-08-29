@@ -1,12 +1,5 @@
-import Link from "next/link";
+import { PipelineView } from "./pipeline-view";
 
-export default function Page() {
-  return (
-    <div>
-      ini page pipeline. go to{" "}
-      <Link href="/pipeline/detail" className="text-blue-600">
-        detail
-      </Link>
-    </div>
-  );
+export default function PipelinePage() {
+  return <PipelineView />;
 }
