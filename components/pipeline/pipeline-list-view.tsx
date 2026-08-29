@@ -111,7 +111,7 @@ export function PipelineListView({
                           return (
                             <tr
                               key={deal.id}
-                              className={`hover:bg-muted/30 transition-colors block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none ${
+                              className={`hover:bg-muted/30 transition-colors block md:table-row mb-1.5 md:mb-0 border border-border md:border-transparent md:border-b-border last:md:border-b-transparent rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none ${
                                 isUpdating
                                   ? "opacity-50 pointer-events-none"
                                   : ""

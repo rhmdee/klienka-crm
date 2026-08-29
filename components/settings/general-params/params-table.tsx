@@ -32,7 +32,7 @@ export function ParamsTable({
           <tbody className="block p-1.5 lg:p-0 md:table-row-group divide-y md:divide-border md:divide-y">
             {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
-                <tr key={i} className="animate-pulse block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent">
+                <tr key={i} className="animate-pulse block md:table-row mb-1.5 md:mb-0 border border-border md:border-transparent md:border-b-border last:md:border-b-transparent rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent">
                   <td data-title="Kunci Parameter" className="flex items-center justify-between md:table-cell py-3 px-4 border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                     <Skeleton className="h-5 w-36 rounded-md" />
                   </td>
@@ -68,7 +68,7 @@ export function ParamsTable({
               params.map((param) => (
                 <tr
                   key={param.id}
-                  className="hover:bg-muted/30 transition-colors block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none"
+                  className="hover:bg-muted/30 transition-colors block md:table-row mb-1.5 md:mb-0 border border-border md:border-transparent md:border-b-border last:md:border-b-transparent rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none"
                 >
                   {/* Kunci Parameter */}
                   <td data-title="Kunci Parameter" className="flex items-center justify-between md:table-cell py-3 px-4 border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0 font-mono font-semibold text-foreground">

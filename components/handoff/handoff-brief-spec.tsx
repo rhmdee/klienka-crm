@@ -104,7 +104,7 @@ export function HandoffBriefSpec({ deal }: HandoffBriefSpecProps) {
               </thead>
               <tbody className="block p-1.5 lg:p-0 md:table-row-group divide-y md:divide-border md:divide-y">
                 {approvedSOW.items.map((item) => (
-                  <tr key={item.id} className="hover:bg-muted/20 block md:table-row mb-1.5 md:mb-0 border border-border rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none">
+                  <tr key={item.id} className="hover:bg-muted/20 block md:table-row mb-1.5 md:mb-0 border border-border md:border-transparent md:border-b-border last:md:border-b-transparent rounded-lg lg:rounded-xl md:rounded-none overflow-hidden bg-card md:bg-transparent shadow-2xs md:shadow-none">
                     <td data-title="Peran Teknis" className="flex items-center justify-between md:table-cell py-2.5 px-3 font-medium text-foreground border-b border-border/50 md:border-0 before:content-[attr(data-title)] before:font-medium before:text-muted-foreground md:before:hidden last:border-0">
                       {item.roleName}
                     </td>
