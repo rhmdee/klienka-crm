@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { Plus, Loader2 } from "lucide-react";
 import { DealItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface CreateLeadDrawerProps {
   open: boolean;
@@ -76,7 +77,10 @@ function CreateLeadForm({ onCancel, onSuccess }: CreateLeadFormProps) {
 
       const res = await fetch("/api/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify(payload),
       });
 

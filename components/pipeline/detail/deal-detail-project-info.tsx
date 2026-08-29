@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 import { DealItem } from "../types";
+import { useUserRole } from "@/hooks/use-user-role";
 
 interface DealDetailProjectInfoProps {
   deal: DealItem;
@@ -28,6 +29,7 @@ export function DealDetailProjectInfo({
   deal,
   onOpenEditDrawer,
 }: DealDetailProjectInfoProps) {
+  const { canManagePipeline } = useUserRole();
   const [copied, setCopied] = useState(false);
   const sowItem = deal.sows && deal.sows.length > 0 ? deal.sows[0] : null;
 
@@ -55,15 +57,17 @@ export function DealDetailProjectInfo({
             Informasi Ringkasan & Ruang Lingkup Proyek
           </h2>
         </div>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={onOpenEditDrawer}
-          className="gap-1 text-xs h-7 px-2.5 cursor-pointer"
-        >
-          <Edit3 className="size-3" />
-          <span>Edit Prospek</span>
-        </Button>
+        {canManagePipeline && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onOpenEditDrawer}
+            className="gap-1 text-xs h-7 px-2.5 cursor-pointer"
+          >
+            <Edit3 className="size-3" />
+            <span>Edit Prospek</span>
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col gap-1.5 text-xs">
@@ -169,12 +173,14 @@ export function DealDetailProjectInfo({
                 Belum ada dokumen estimasi SOW untuk prospek ini.
               </span>
             </div>
-            <Link href={`/pipeline/${deal.id}/sow`}>
-              <Button size="sm" className="h-7 px-2.5 text-xs gap-1.5 cursor-pointer shrink-0">
-                <Plus className="size-3" />
-                <span>Buat Estimasi SOW</span>
-              </Button>
-            </Link>
+            {canManagePipeline && (
+              <Link href={`/pipeline/${deal.id}/sow`}>
+                <Button size="sm" className="h-7 px-2.5 text-xs gap-1.5 cursor-pointer shrink-0">
+                  <Plus className="size-3" />
+                  <span>Buat Estimasi SOW</span>
+                </Button>
+              </Link>
+            )}
           </div>
         )}
       </div>

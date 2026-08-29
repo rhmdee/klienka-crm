@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { updateLeadStageSchema } from "@/lib/validations/lead";
+import { checkPermission } from "@/lib/auth-guard";
 
 // Helper aman untuk BigInt
 export async function PATCH(
@@ -8,6 +9,15 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> | { id: string } },
 ) {
   try {
+    // Role Guard: Hanya ADMIN dan BD yang boleh memindahkan stage lead
+    const auth = await checkPermission(req, [
+      "ADMINISTRATOR",
+      "BUSINESS_DEVELOPMENT",
+    ]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     // Tangani params dengan aman (mendukung Next.js App Router terbaru)
     const resolvedParams = await Promise.resolve(params);
     const id = resolvedParams.id;

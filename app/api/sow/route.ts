@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getNumericGeneralParam } from "@/lib/params";
 import { createSowSchema } from "@/lib/validations/sow";
 import { randomUUID } from "crypto";
+import { checkPermission, forbiddenResponse } from "@/lib/auth-guard";
 
 // Helper untuk serialisasi BigInt
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,6 +21,15 @@ const jsonResponse = (data: any, status = 200) => {
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Role Guard: Hanya ADMIN dan BD yang boleh membuat atau mengubah SOW
+    const auth = await checkPermission(req, [
+      "ADMINISTRATOR",
+      "BUSINESS_DEVELOPMENT",
+    ]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const body = await req.json();
 
     const validationResult = createSowSchema.safeParse(body);
@@ -37,11 +47,25 @@ export async function POST(req: NextRequest) {
     const { dealId, marginPercentage, items } = validationResult.data;
 
     // Pastikan Deal ada
-    const deal = await prisma.deal.findUnique({ where: { id: dealId } });
+    const deal = await prisma.deal.findUnique({
+      where: { id: dealId },
+      include: { sows: true },
+    });
     if (!deal) {
       return jsonResponse(
         { success: false, message: "Deal tidak ditemukan" },
         404,
+      );
+    }
+
+    // 2. SOW Lock Guard: Jika deal CLOSED_WON atau ada SOW APPROVED, hanya ADMIN yang boleh override
+    const isLocked =
+      deal.stage === "CLOSED_WON" ||
+      deal.sows.some((s) => s.status === "APPROVED");
+
+    if (isLocked && auth.role !== "ADMINISTRATOR") {
+      return forbiddenResponse(
+        "Dokumen SOW ini telah disetujui (Closed Won) dan terkunci. Hanya Administrator yang memiliki hak force majeure override.",
       );
     }
 

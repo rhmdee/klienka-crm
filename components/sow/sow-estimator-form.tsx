@@ -12,6 +12,7 @@ interface SOWEstimatorFormProps {
   onUpdateItem: (id: string, field: keyof SOWRoleItem, value: string | number) => void;
   onAddItem: () => void;
   onRemoveItem: (id: string) => void;
+  disabled?: boolean;
 }
 
 export function SOWEstimatorForm({
@@ -19,6 +20,7 @@ export function SOWEstimatorForm({
   onUpdateItem,
   onAddItem,
   onRemoveItem,
+  disabled = false,
 }: SOWEstimatorFormProps) {
   const totalManDays = items.reduce((acc, curr) => acc + (Number(curr.manDays) || 0), 0);
 
@@ -50,6 +52,7 @@ export function SOWEstimatorForm({
             size="sm"
             variant="outline"
             onClick={onAddItem}
+            disabled={disabled}
             className="text-xs gap-1 h-8 cursor-pointer"
           >
             <Plus className="size-3.5" />
@@ -63,7 +66,9 @@ export function SOWEstimatorForm({
         {items.map((item, index) => (
           <div
             key={item.id}
-            className="p-3.5 rounded-lg border border-border bg-background flex flex-col sm:flex-row items-start sm:items-center gap-3 transition-all hover:border-border/80"
+            className={`p-3.5 rounded-lg border border-border bg-background flex flex-col sm:flex-row items-start sm:items-center gap-3 transition-all ${
+              disabled ? "opacity-75 bg-muted/20" : "hover:border-border/80"
+            }`}
           >
             <div className="flex items-center gap-2 w-full sm:w-52 shrink-0">
               <span className="text-xs font-semibold text-muted-foreground size-5 rounded-full bg-muted flex items-center justify-center shrink-0">
@@ -75,6 +80,7 @@ export function SOWEstimatorForm({
                 </label>
                 <Input
                   value={item.roleName}
+                  disabled={disabled}
                   onChange={(e) => onUpdateItem(item.id, "roleName", e.target.value)}
                   placeholder="e.g. UI/UX Designer"
                   className="h-8 text-xs font-medium"
@@ -91,6 +97,7 @@ export function SOWEstimatorForm({
                   <Input
                     type="number"
                     min={1}
+                    disabled={disabled}
                     value={item.manDays === 0 ? "" : item.manDays}
                     onChange={(e) => {
                       const val = Math.max(0, parseInt(e.target.value) || 0);
@@ -113,6 +120,7 @@ export function SOWEstimatorForm({
                   type="number"
                   min={0}
                   step={50000}
+                  disabled={disabled}
                   value={item.dailyRate === 0 ? "" : item.dailyRate}
                   onChange={(e) => {
                     const val = Math.max(0, parseInt(e.target.value) || 0);
@@ -136,7 +144,7 @@ export function SOWEstimatorForm({
                 type="button"
                 variant="ghost"
                 size="icon-xs"
-                disabled={items.length <= 1}
+                disabled={disabled || items.length <= 1}
                 onClick={() => onRemoveItem(item.id)}
                 className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer disabled:opacity-30"
                 title="Hapus baris"

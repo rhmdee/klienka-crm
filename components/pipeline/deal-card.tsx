@@ -19,6 +19,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { DealItem, DealStage, STAGES, STAGE_ORDER, formatIDR } from "./types";
+import { useUserRole } from "@/hooks/use-user-role";
 
 interface DealCardProps {
   deal: DealItem;
@@ -27,6 +28,7 @@ interface DealCardProps {
 }
 
 export function DealCard({ deal, onMoveStage, isUpdating }: DealCardProps) {
+  const { canManagePipeline } = useUserRole();
   return (
     <div
       className={`p-3.5 rounded-lg bg-background border border-border shadow-xs hover:border-primary/50 transition-all flex flex-col gap-2.5 ${
@@ -47,25 +49,29 @@ export function DealCard({ deal, onMoveStage, isUpdating }: DealCardProps) {
             align="end"
             className="w-48 bg-background border border-border p-1"
           >
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground px-2 py-1">
-                Pindah Tahap (Stage)
-              </DropdownMenuLabel>
-              {STAGES.map((s) => (
-                <DropdownMenuItem
-                  key={s.key}
-                  disabled={deal.stage === s.key}
-                  onClick={() => onMoveStage(deal.id, s.key)}
-                  className="text-xs px-2 py-1.5 cursor-pointer flex items-center justify-between"
-                >
-                  <span>{s.label}</span>
-                  {deal.stage === s.key && (
-                    <CheckCircle2 className="size-3 text-secondary" />
-                  )}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            {canManagePipeline && (
+              <>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground px-2 py-1">
+                    Pindah Tahap (Stage)
+                  </DropdownMenuLabel>
+                  {STAGES.map((s) => (
+                    <DropdownMenuItem
+                      key={s.key}
+                      disabled={deal.stage === s.key}
+                      onClick={() => onMoveStage(deal.id, s.key)}
+                      className="text-xs px-2 py-1.5 cursor-pointer flex items-center justify-between"
+                    >
+                      <span>{s.label}</span>
+                      {deal.stage === s.key && (
+                        <CheckCircle2 className="size-3 text-secondary" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </>
+            )}
             <Link
               href={`/pipeline/${deal.id}`}
               className="flex items-center justify-between text-xs px-2 py-1.5 rounded-sm hover:bg-muted text-primary transition-colors cursor-pointer"
@@ -114,30 +120,31 @@ export function DealCard({ deal, onMoveStage, isUpdating }: DealCardProps) {
           {formatIDR(deal.estimatedBudget)}
         </span>
 
-        {/* Quick button to next stage if available */}
-        {(() => {
-          const currentIndex = STAGE_ORDER.indexOf(deal.stage);
-          if (
-            currentIndex >= 0 &&
-            currentIndex < STAGE_ORDER.length - 1 &&
-            deal.stage !== "CLOSED_WON" &&
-            deal.stage !== "CLOSED_LOST"
-          ) {
-            const nextStage = STAGE_ORDER[currentIndex + 1];
-            return (
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-6 px-2 text-[11px] text-muted-foreground hover:text-foreground gap-1 cursor-pointer"
-                onClick={() => onMoveStage(deal.id, nextStage)}
-              >
-                <span>Lanjut</span>
-                <ArrowRight className="size-3" />
-              </Button>
-            );
-          }
-          return null;
-        })()}
+        {/* Quick button to next stage if available and authorized */}
+        {canManagePipeline &&
+          (() => {
+            const currentIndex = STAGE_ORDER.indexOf(deal.stage);
+            if (
+              currentIndex >= 0 &&
+              currentIndex < STAGE_ORDER.length - 1 &&
+              deal.stage !== "CLOSED_WON" &&
+              deal.stage !== "CLOSED_LOST"
+            ) {
+              const nextStage = STAGE_ORDER[currentIndex + 1];
+              return (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-6 px-2 text-[11px] text-muted-foreground hover:text-foreground gap-1 cursor-pointer"
+                  onClick={() => onMoveStage(deal.id, nextStage)}
+                >
+                  <span>Lanjut</span>
+                  <ArrowRight className="size-3" />
+                </Button>
+              );
+            }
+            return null;
+          })()}
       </div>
     </div>
   );

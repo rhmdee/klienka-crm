@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { HandoffItem } from "./types";
+import { useUserRole } from "@/hooks/use-user-role";
 
 interface HandoffAssignmentCardProps {
   handoff: HandoffItem | null;
@@ -33,6 +34,7 @@ export function HandoffAssignmentCard({
   onSave,
   isSaving,
 }: HandoffAssignmentCardProps) {
+  const { canAssignHandoff } = useUserRole();
   const isAssigned =
     handoff?.assignedOperator &&
     handoff.assignedOperator !== "PENDING_ASSIGNMENT";
@@ -82,26 +84,31 @@ export function HandoffAssignmentCard({
             Pilih Penanggung Jawab Operasional *
           </label>
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-9 w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-1 text-xs text-foreground hover:bg-muted/50 transition-colors cursor-pointer">
-              <span className="truncate">
-                {selectedOperator || "Pilih Nama Operator"}
-              </span>
-              <ChevronDown className="size-3.5 text-muted-foreground shrink-0" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-64 bg-background border border-border"
+            <DropdownMenuTrigger
+              disabled={!canAssignHandoff}
+              className={`w-full flex items-center justify-between p-2.5 rounded-lg border border-border bg-background text-xs font-medium text-foreground transition-colors ${
+                canAssignHandoff ? "hover:bg-muted/50 cursor-pointer" : "opacity-75 cursor-not-allowed"
+              }`}
             >
-              {availableOperators.map((op) => (
-                <DropdownMenuItem
-                  key={op}
-                  onClick={() => onSelectedOperatorChange(op)}
-                  className="text-xs py-2 cursor-pointer font-medium"
-                >
-                  {op}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
+              <span>{selectedOperator || "Pilih Operator Teknis..."}</span>
+              {canAssignHandoff && <ChevronDown className="size-3.5 text-muted-foreground" />}
+            </DropdownMenuTrigger>
+            {canAssignHandoff && (
+              <DropdownMenuContent
+                align="end"
+                className="w-64 bg-background border border-border"
+              >
+                {availableOperators.map((op) => (
+                  <DropdownMenuItem
+                    key={op}
+                    onClick={() => onSelectedOperatorChange(op)}
+                    className="text-xs py-2 cursor-pointer font-medium"
+                  >
+                    {op}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            )}
           </DropdownMenu>
           <span className="text-[10px] text-muted-foreground">
             Nama operator disimpan murni sebagai string parameter tanpa FK
@@ -116,31 +123,34 @@ export function HandoffAssignmentCard({
           </label>
           <textarea
             rows={4}
+            disabled={!canAssignHandoff}
             value={briefNotes}
             onChange={(e) => onBriefNotesChange(e.target.value)}
             placeholder="Masukkan catatan kick-off, link repository, instruksi khusus untuk tim developer..."
-            className="w-full text-xs p-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors resize-none"
+            className="w-full text-xs p-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors resize-none disabled:opacity-75"
           />
         </div>
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          disabled={isSaving || !selectedOperator}
-          className="w-full h-9 text-xs font-semibold gap-1.5 cursor-pointer shadow-xs"
-        >
-          {isSaving ? (
-            <>
-              <Loader2 className="size-3.5 animate-spin" />
-              <span>Menyimpan Penugasan...</span>
-            </>
-          ) : (
-            <>
-              <Save className="size-3.5" />
-              <span>Simpan Penugasan Operator</span>
-            </>
-          )}
-        </Button>
+        {canAssignHandoff && (
+          <Button
+            type="submit"
+            disabled={isSaving || !selectedOperator}
+            className="w-full h-9 text-xs font-semibold gap-1.5 cursor-pointer shadow-xs"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" />
+                <span>Menyimpan Penugasan...</span>
+              </>
+            ) : (
+              <>
+                <Save className="size-3.5" />
+                <span>Simpan Penugasan Operator</span>
+              </>
+            )}
+          </Button>
+        )}
       </form>
     </Card>
   );

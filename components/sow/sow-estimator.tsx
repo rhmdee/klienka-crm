@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, useParams } from "next/navigation";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Lock, Unlock, AlertOctagon, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,12 +16,15 @@ import {
   SOWGenerateResponse,
 } from "./types";
 import { DealItem, STAGES } from "@/components/pipeline/types";
+import { useUserRole } from "@/hooks/use-user-role";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface SOWEstimatorProps {
   initialDealId?: string;
 }
 
 export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
+  const { isAdmin, canManageSOW } = useUserRole();
   const searchParams = useSearchParams();
   const routeParams = useParams();
 
@@ -33,6 +36,7 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
 
   const [deal, setDeal] = useState<DealItem | null>(null);
   const [isLoadingDeal, setIsLoadingDeal] = useState<boolean>(true);
+  const [adminOverride, setAdminOverride] = useState<boolean>(false);
 
   // SOW Items State
   const [items, setItems] = useState<SOWRoleItem[]>(() =>
@@ -224,7 +228,10 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
 
       const res = await fetch("/api/sow", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify(payload),
       });
 
@@ -247,6 +254,24 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
 
   const currentStageInfo = STAGES.find((s) => s.key === deal?.stage);
 
+  // SOW Lock & RBAC calculations
+  const isClosedWon =
+    deal?.stage === "CLOSED_WON" ||
+    (deal?.sows && deal.sows.some((s) => s.status === "APPROVED"));
+  const isLocked = isClosedWon && !adminOverride;
+  const isReadOnlyRole = !canManageSOW;
+  const isFormDisabled = isLocked || isReadOnlyRole;
+
+  const handleToggleAdminOverride = () => {
+    if (!adminOverride) {
+      setAdminOverride(true);
+      toast.warning("Force Majeure Override aktif: Anda membuka kunci dokumen SOW yang telah disetujui.");
+    } else {
+      setAdminOverride(false);
+      toast.info("Force Majeure Override dinonaktifkan. Dokumen kembali terkunci.");
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-4">
       {/* Header Banner - Identik dengan DealDetailHeader */}
@@ -266,6 +291,24 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
                     className={`${currentStageInfo?.badgeColor || "bg-muted text-foreground"} text-xs font-semibold px-2.5 py-0.5 rounded-full border-0`}
                   >
                     {currentStageInfo?.label || deal.stage}
+                  </Badge>
+                )}
+                {isClosedWon && (
+                  <Badge
+                    variant="outline"
+                    className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 text-xs px-2.5 py-0.5 rounded-full gap-1"
+                  >
+                    <Lock className="size-3" />
+                    <span>Terkunci (Closed Won)</span>
+                  </Badge>
+                )}
+                {adminOverride && (
+                  <Badge
+                    variant="outline"
+                    className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 text-xs px-2.5 py-0.5 rounded-full gap-1 animate-pulse"
+                  >
+                    <Unlock className="size-3" />
+                    <span>Admin Override Aktif</span>
                   </Badge>
                 )}
               </>
@@ -288,8 +331,29 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
           )}
         </div>
 
-        {/* Action Button: Refresh Button */}
+        {/* Action Buttons: Admin Override Toggle & Refresh */}
         <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
+          {isClosedWon && isAdmin && (
+            <Button
+              size="sm"
+              variant={adminOverride ? "destructive" : "outline"}
+              onClick={handleToggleAdminOverride}
+              className="gap-1.5 text-xs h-8 cursor-pointer"
+            >
+              {adminOverride ? (
+                <>
+                  <Lock className="size-3.5" />
+                  <span>Kunci Kembali SOW</span>
+                </>
+              ) : (
+                <>
+                  <ShieldAlert className="size-3.5 text-red-500" />
+                  <span>Buka Kunci Darurat (Admin Override)</span>
+                </>
+              )}
+            </Button>
+          )}
+
           <Button
             size="icon-sm"
             variant="outline"
@@ -305,6 +369,22 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
         </div>
       </div>
 
+      {/* Lock Warning Banner for Non-Admin or Locked State */}
+      {isClosedWon && isLocked && (
+        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2.5">
+          <AlertOctagon className="size-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <div className="flex flex-col gap-0.5">
+            <span className="font-semibold">
+              Dokumen SOW ini telah disetujui &amp; kesepakatan bernilai tetap (Closed Won).
+            </span>
+            <span>
+              Perubahan rincian man-days dan margin dikunci untuk menjaga integritas kontrak.
+              {isAdmin && " Sebagai Administrator, Anda dapat menekan tombol Buka Kunci Darurat di atas jika terdapat kondisi force majeure."}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* 2-Column Desktop Grid: Left Form (8/12) & Right Summary (4/12) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Left Column: Form Roles & Man-Days (8 of 12) */}
@@ -314,6 +394,7 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
             onUpdateItem={handleUpdateItem}
             onAddItem={handleAddItem}
             onRemoveItem={handleRemoveItem}
+            disabled={isFormDisabled}
           />
         </div>
 
@@ -329,6 +410,7 @@ export function SOWEstimator({ initialDealId }: SOWEstimatorProps) {
             dealId={deal?.id}
             selectedDealTitle={deal?.title}
             selectedClientName={deal?.client.companyName}
+            disabled={isFormDisabled}
           />
         </div>
       </div>

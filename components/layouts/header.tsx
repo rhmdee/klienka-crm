@@ -1,6 +1,7 @@
 "use client";
 
 import ThemeToggle from "@/components/layouts/theme-toggle";
+import { RoleSwitcher } from "@/components/layouts/header/role-switcher";
 import { cn } from "@/lib/utils";
 import { AppName } from "./app-name";
 
@@ -19,6 +20,7 @@ export default function Header({ className }: HeaderProps) {
       <AppName onHeader />
 
       <div className="flex items-center gap-2">
+        <RoleSwitcher />
         <ThemeToggle />
       </div>
     </header>

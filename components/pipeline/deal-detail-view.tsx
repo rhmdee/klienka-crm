@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AlertCircle, Layers, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
+import { getRoleHeaders } from "@/lib/api-client";
 import { EditDealDrawer } from "./edit-deal-drawer";
 import {
   DealDetailHeader,
@@ -186,7 +187,10 @@ export function DealDetailView({ dealId: propDealId }: DealDetailViewProps = {})
 
       const res = await fetch(`/api/leads/${deal.id}/stage`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...getRoleHeaders(),
+        },
         body: JSON.stringify(payload),
       });
 

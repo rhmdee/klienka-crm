@@ -5,6 +5,9 @@ import { Search, RefreshCw, Layers, List, Plus } from "lucide-react";
 import { STAGES } from "./types";
 import { cn } from "@/lib/utils";
 
+import { useUserRole } from "@/hooks/use-user-role";
+import { Badge } from "@/components/ui/badge";
+
 interface PipelineHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -28,27 +31,38 @@ export function PipelineHeader({
   onOpenCreateLead,
   isLoading,
 }: PipelineHeaderProps) {
+  const { canCreateLead, isPM } = useUserRole();
+
   return (
     <div className="flex flex-col gap-4">
       {/* Top Title Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            Pipeline Management
-          </h1>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold text-foreground">
+              Pipeline Management
+            </h1>
+            {isPM && (
+              <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/20">
+                Mode Pantau (Read-Only)
+              </Badge>
+            )}
+          </div>
           <p className="text-sm text-muted-foreground">
             Lacak dan kelola prospek bisnis (Leads & Deals) dari tahap awal
             hingga penutupan.
           </p>
         </div>
 
-        <Button
-          onClick={onOpenCreateLead}
-          className="gap-1.5 cursor-pointer h-9 shrink-0 self-start sm:self-auto"
-        >
-          <Plus className="size-4" />
-          <span>Tambah Lead</span>
-        </Button>
+        {canCreateLead && (
+          <Button
+            onClick={onOpenCreateLead}
+            className="gap-1.5 cursor-pointer h-9 shrink-0 self-start sm:self-auto"
+          >
+            <Plus className="size-4" />
+            <span>Tambah Lead</span>
+          </Button>
+        )}
       </div>
 
       {/* Controls Bar: Switch View Mode -> Search -> Filter Stage -> Refresh */}

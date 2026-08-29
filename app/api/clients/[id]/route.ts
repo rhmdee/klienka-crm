@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { updateClientSchema } from "@/lib/validations/client";
+import { checkPermission } from "@/lib/auth-guard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonResponse = (data: any, status = 200) => {
@@ -21,6 +22,15 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    // Role Guard: Hanya ADMIN dan BD yang boleh mengubah data klien
+    const auth = await checkPermission(req, [
+      "ADMINISTRATOR",
+      "BUSINESS_DEVELOPMENT",
+    ]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const { id } = await params;
     const body = await req.json();
 
@@ -96,12 +106,18 @@ export async function PUT(
   }
 }
 
-// DELETE /api/clients/[id]: Menghapus klien (dengan perlindungan integritas relasi deal)
+// DELETE /api/clients/[id]: Menghapus klien (Hanya ADMIN)
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    // Role Guard: Hanya ADMINISTRATOR yang boleh menghapus klien
+    const auth = await checkPermission(req, ["ADMINISTRATOR"]);
+    if (!auth.allowed && auth.response) {
+      return auth.response;
+    }
+
     const { id } = await params;
 
     const existingClient = await prisma.client.findUnique({

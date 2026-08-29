@@ -19,6 +19,7 @@ import {
 import { DealItem, DealStage, STAGES, formatIDR } from "./types";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserRole } from "@/hooks/use-user-role";
 
 interface PipelineListViewProps {
   deals: DealItem[];
@@ -31,6 +32,7 @@ export function PipelineListView({
   onMoveStage,
   updatingDealId,
 }: PipelineListViewProps) {
+  const { canManagePipeline } = useUserRole();
   // Default open all stages that have deals, or at least the first 3 stages
   const defaultOpenStages = useMemo(() => {
     const active = STAGES.filter((s) =>
@@ -169,30 +171,32 @@ export function PipelineListView({
                               {/* Actions */}
                               <td className="py-3 px-4 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
-                                  {/* Dropdown Change Stage */}
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger className="inline-flex items-center justify-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer h-7">
-                                      <span>Ubah Stage</span>
-                                      <ChevronDown className="size-3" />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                      align="end"
-                                      className="w-44 bg-background border border-border"
-                                    >
-                                      {STAGES.map((s) => (
-                                        <DropdownMenuItem
-                                          key={s.key}
-                                          disabled={deal.stage === s.key}
-                                          onClick={() =>
-                                            onMoveStage(deal.id, s.key)
-                                          }
-                                          className="text-xs cursor-pointer"
-                                        >
-                                          {s.label}
-                                        </DropdownMenuItem>
-                                      ))}
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
+                                  {/* Dropdown Change Stage (Only if canManagePipeline) */}
+                                  {canManagePipeline && (
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger className="inline-flex items-center justify-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer h-7">
+                                        <span>Ubah Stage</span>
+                                        <ChevronDown className="size-3" />
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent
+                                        align="end"
+                                        className="w-44 bg-background border border-border"
+                                      >
+                                        {STAGES.map((s) => (
+                                          <DropdownMenuItem
+                                            key={s.key}
+                                            disabled={deal.stage === s.key}
+                                            onClick={() =>
+                                              onMoveStage(deal.id, s.key)
+                                            }
+                                            className="text-xs cursor-pointer"
+                                          >
+                                            {s.label}
+                                          </DropdownMenuItem>
+                                        ))}
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  )}
 
                                   <Link href={`/pipeline/${deal.id}`}>
                                     <Button

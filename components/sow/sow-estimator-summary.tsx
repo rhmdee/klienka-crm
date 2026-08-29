@@ -34,6 +34,7 @@ interface SOWEstimatorSummaryProps {
   dealId?: string;
   selectedDealTitle?: string;
   selectedClientName?: string;
+  disabled?: boolean;
 }
 
 export function SOWEstimatorSummary({
@@ -46,6 +47,7 @@ export function SOWEstimatorSummary({
   dealId,
   selectedDealTitle,
   selectedClientName,
+  disabled = false,
 }: SOWEstimatorSummaryProps) {
   const [copied, setCopied] = useState(false);
   const [isDismissed, setIsDismissed] = useState<string | null>(null);
@@ -146,6 +148,7 @@ export function SOWEstimatorSummary({
                     type="number"
                     min={20}
                     max={100}
+                    disabled={disabled}
                     value={marginPercentage}
                     onChange={(e) => {
                       const val = parseFloat(e.target.value) || 0;
@@ -204,7 +207,7 @@ export function SOWEstimatorSummary({
         <Button
           type="button"
           onClick={onGenerate}
-          disabled={isGenerating || calculation.baseCost <= 0 || isMarginWarning}
+          disabled={disabled || isGenerating || calculation.baseCost <= 0 || isMarginWarning}
           className="w-full h-9 gap-1.5 text-xs font-semibold cursor-pointer shadow-sm"
         >
           {isGenerating ? (

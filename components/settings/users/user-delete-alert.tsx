@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
 import { UserItem } from "./types";
+import { getRoleHeaders } from "@/lib/api-client";
 
 interface UserDeleteAlertProps {
   open: boolean;
@@ -40,6 +41,9 @@ function UserDeleteContent({
     try {
       const res = await fetch(`/api/settings/users/${userToDelete.id}`, {
         method: "DELETE",
+        headers: {
+          ...getRoleHeaders(),
+        },
       });
 
       const data = await res.json();
