@@ -40,9 +40,18 @@ export async function POST(
       );
     }
 
-    // Panggil Supabase Admin untuk generate / kirim recovery link
+    // Dapatkan origin URL request (otomatis mendeteksi domain Vercel / localhost)
+    const origin =
+      req.headers.get("origin") ||
+      (req.headers.get("x-forwarded-host")
+        ? `${req.headers.get("x-forwarded-proto") || "https"}://${req.headers.get("x-forwarded-host")}`
+        : req.nextUrl.origin);
+
+    // Panggil Supabase Admin untuk generate / kirim recovery link dengan dynamic redirectTo
     const { error: resetError } =
-      await supabaseAdmin.auth.resetPasswordForEmail(existingUser.email);
+      await supabaseAdmin.auth.resetPasswordForEmail(existingUser.email, {
+        redirectTo: `${origin}/dashboard`,
+      });
 
     if (resetError) {
       console.error("Supabase reset password error:", resetError);

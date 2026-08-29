@@ -86,9 +86,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Kirim Email Undangan ke Supabase Auth
+    // Dapatkan origin URL request (otomatis mendeteksi domain Vercel / localhost)
+    const origin =
+      req.headers.get("origin") ||
+      (req.headers.get("x-forwarded-host")
+        ? `${req.headers.get("x-forwarded-proto") || "https"}://${req.headers.get("x-forwarded-host")}`
+        : req.nextUrl.origin);
+
+    // 1. Kirim Email Undangan ke Supabase Auth dengan dynamic redirectTo
     const { data: authData, error: authError } =
       await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+        redirectTo: `${origin}/dashboard`,
         data: {
           name,
           role,
