@@ -18,6 +18,7 @@ function formatSegmentLabel(segment: string, prevSegment?: string) {
   if (isIdSegment(segment)) {
     const prev = prevSegment?.toLowerCase();
     if (prev === "pipeline") return "Detail Prospek";
+    if (prev === "handoff") return "Handoff Brief";
     if (prev === "leads") return "Detail Lead";
     if (prev === "sow") return "Detail SOW";
     return "Detail";
@@ -27,6 +28,7 @@ function formatSegmentLabel(segment: string, prevSegment?: string) {
   const lower = segment.toLowerCase();
   if (lower === "sow") return "SOW Estimator";
   if (lower === "pipeline") return "Pipeline";
+  if (lower === "handoff") return "Handoff";
   if (lower === "leads") return "Leads";
   if (lower === "dashboard") return "Dashboard";
 

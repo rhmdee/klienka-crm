@@ -71,17 +71,62 @@ export async function PATCH(
       }
     }
 
-    const updatedDeal = await prisma.deal.update({
-      where: { id },
-      data: {
-        stage,
-        ...(estimatedBudget !== undefined
-          ? { estimatedBudget: BigInt(estimatedBudget) }
-          : {}),
-        ...(techStack !== undefined ? { techStack } : {}),
-        ...(lossReason !== undefined ? { lossReason } : {}),
-      },
-    });
+    let updatedDeal;
+
+    if (stage === "CLOSED_WON") {
+      const result = await prisma.$transaction(async (tx) => {
+        const dealRes = await tx.deal.update({
+          where: { id },
+          data: {
+            stage,
+            ...(estimatedBudget !== undefined
+              ? { estimatedBudget: BigInt(estimatedBudget) }
+              : {}),
+            ...(techStack !== undefined ? { techStack } : {}),
+            ...(lossReason !== undefined ? { lossReason } : {}),
+          },
+        });
+
+        // Ensure latest SOW is marked approved
+        const latestSow = await tx.sOW.findFirst({
+          where: { dealId: id },
+          orderBy: { version: "desc" },
+        });
+
+        if (latestSow && latestSow.status !== "APPROVED") {
+          await tx.sOW.update({
+            where: { id: latestSow.id },
+            data: { status: "APPROVED" },
+          });
+        }
+
+        // Auto-create / upsert Handoff record
+        await tx.handoff.upsert({
+          where: { dealId: id },
+          update: {},
+          create: {
+            dealId: id,
+            assignedOperator: "PENDING_ASSIGNMENT",
+            briefNotes: "Otomatis digenerate saat deal ditandai Closed Won.",
+          },
+        });
+
+        return dealRes;
+      });
+      updatedDeal = result;
+    } else {
+      updatedDeal = await prisma.deal.update({
+        where: { id },
+        data: {
+          stage,
+          ...(estimatedBudget !== undefined
+            ? { estimatedBudget: BigInt(estimatedBudget) }
+            : {}),
+          ...(techStack !== undefined ? { techStack } : {}),
+          ...(lossReason !== undefined ? { lossReason } : {}),
+        },
+      });
+    }
 
     // Serialisasi BigInt otomatis untuk JSON response
     return new NextResponse(

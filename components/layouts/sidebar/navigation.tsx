@@ -12,6 +12,11 @@ const menuItems: MenuItemProps[] = [
     label: "Pipeline",
   },
   {
+    href: "/handoff",
+    icon: "FileCheck",
+    label: "Handoff",
+  },
+  {
     href: "/leads",
     icon: "UserRound",
     label: "Leads",
