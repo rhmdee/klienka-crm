@@ -17,9 +17,14 @@ const menuItems: MenuItemProps[] = [
     label: "Handoff",
   },
   {
-    href: "/leads",
-    icon: "UserRound",
-    label: "Leads",
+    href: "/settings/users",
+    icon: "Users",
+    label: "User Management",
+  },
+  {
+    href: "/settings/general-params",
+    icon: "SlidersHorizontal",
+    label: "Parameter Sistem",
   },
 ];
 

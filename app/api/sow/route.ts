@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getNumericGeneralParam } from "@/lib/params";
 import { createSowSchema } from "@/lib/validations/sow";
 import { randomUUID } from "crypto";
 
@@ -57,7 +58,18 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    // Terapkan Margin Profit minimum 20% (BR-SOW-02)
+    // Terapkan Margin Profit minimum dinamis dari General Parameters (default 20% / BR-SOW-02)
+    const minMargin = await getNumericGeneralParam("MIN_PROFIT_MARGIN", 20);
+    if (marginPercentage < minMargin) {
+      return jsonResponse(
+        {
+          success: false,
+          message: `Margin keuntungan tidak boleh kurang dari batas minimum sistem (${minMargin}%).`,
+        },
+        400,
+      );
+    }
+
     const profitMultiplier = 1 + marginPercentage / 100;
     // Konversi sederhana untuk BigInt kalkulasi margin
     const totalCostWithMargin = BigInt(
