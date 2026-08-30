@@ -45,9 +45,13 @@ export async function updateSessionProxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // 1. Proteksi Rute Internal (Dashboard, Leads, SOW, Handoff)
+  // 1. Proteksi Rute Internal (Dashboard, Pipeline, Clients, Users, General Params, SOW, Handoff)
   const isProtectedRoute =
     pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/pipeline") ||
+    pathname.startsWith("/clients") ||
+    pathname.startsWith("/users") ||
+    pathname.startsWith("/general-params") ||
     pathname.startsWith("/leads") ||
     pathname.startsWith("/sow") ||
     pathname.startsWith("/handoff");
@@ -59,7 +63,7 @@ export async function updateSessionProxy(request: NextRequest) {
   }
 
   // 2. Pengalihan Otomatis Jika User Sudah Login
-  if (user && pathname === "/login") {
+  if (user && (pathname === "/login" || pathname === "/")) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
