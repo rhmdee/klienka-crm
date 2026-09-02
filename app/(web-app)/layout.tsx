@@ -30,7 +30,7 @@ export default async function WebAppLayout({
   }
 
   return (
-    <div className="w-screen h-screen p-2 flex gap-1.5 bg-accent overflow-hidden">
+    <div className="w-screen h-dvh p-2 flex gap-1.5 bg-accent overflow-hidden">
       {/* Mengisi Zustand store secara otomatis saat halaman dibuka */}
       <UserStoreHydrator user={userPayload} />
 
