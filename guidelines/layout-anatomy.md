@@ -3,8 +3,9 @@
 This document breaks down the core application shell found in `app/(web-app)/layout.tsx` and its constituent layout components. It serves as a direct guide for Junior Programmers to understand the structural code and for **Figma Make** (or AI Agents) to accurately recreate the layout, colors, spacing, and responsive behaviors in Figma.
 
 > [!IMPORTANT]
-> **Figma Token Library Mandatory Rule**: 
+> **Figma Token Library Mandatory Rule**:
 > AI Agents and Designers MUST ALWAYS check the Token Library (`guidelines/token.md`) and bound Figma Color/Radius Variables first before building or styling frames.
+>
 > - **NEVER** hardcode raw hex values (e.g., `#FFFFFF`, `#1E293B`, `#F5F5F5`) or create detached ad-hoc styles.
 > - **ALWAYS** bind properties directly to the semantic token variables (`background`, `accent`, `border`, `foreground`, `muted`, `muted-foreground`, `primary`, `primary-foreground`).
 > - Ensure all dimensions strictly conform to the layout anatomy specifications below.
@@ -13,17 +14,17 @@ This document breaks down the core application shell found in `app/(web-app)/lay
 
 ## 🎨 Global Design System & Token Reference
 
-| Attribute | Light Mode Token / Value | Dark Mode Token / Value | Figma Token Variable Binding | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **App Canvas / Frame** | `--accent` (`neutral-100`) | `--accent` (`neutral-900`) | `Color/accent` | Outermost backdrop surrounding white boxes |
-| **Card / Box Background** | `--background` (`#ffffff`) | `--background` (`neutral-950`) | `Color/background` | Primary elevated container surface |
-| **Structural Border** | `--border` (`neutral-200`) | `--border` (`neutral-800`) | `Color/border` | 1px solid stroke on cards, headers, & sidebars |
-| **Primary Text** | `--foreground` (`neutral-900`) | `--foreground` (`#ffffff`) | `Color/foreground` | High contrast text & headers |
-| **Secondary Text** | `--muted-foreground` (`neutral-500`) | `--muted-foreground` (`neutral-400`) | `Color/muted-foreground` | Navigation labels, subtitles, breadcrumb items |
-| **Active Nav Item** | `--primary` (`blue-700`) + `--primary-foreground` (`blue-50`) | `--primary` (`blue-900`) + `--primary-foreground` (`blue-100`) | `Color/primary` + `Color/primary-foreground` | Highlight for current active route |
-| **Nav Hover State** | `--accent` (`neutral-100`) + `--foreground` | `--accent` (`neutral-900`) + `--foreground` | `Color/accent` + `Color/foreground` | Subtle hover fill on interactive items |
-| **Scrollbar Track / Thumb** | `neutral-100` / `neutral-300` | `neutral-800` / `neutral-700` | `Color/scrollbar-track` / `thumb` | Thin scrollbar (`w-1 h-0.5 rounded-full`) |
-| **Corner Radii** | Outer Containers: `rounded-2xl` (`18px`), Inner Items: `rounded-xl` (`14px`), Sub-blocks: `rounded-lg` (`10px`) | Scaled from `--radius: 0.625rem` (`10px`) | `Radius/2xl` (18px), `Radius/xl` (14px), `Radius/lg` (10px) | Strict 4px base radius scaling |
+| Attribute                   | Light Mode Token / Value                                                                                        | Dark Mode Token / Value                                        | Figma Token Variable Binding                                | Notes                                          |
+| :-------------------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------- | :---------------------------------------------------------- | :--------------------------------------------- |
+| **App Canvas / Frame**      | `--accent` (`neutral-100`)                                                                                      | `--accent` (`neutral-900`)                                     | `Color/accent`                                              | Outermost backdrop surrounding white boxes     |
+| **Card / Box Background**   | `--background` (`#ffffff`)                                                                                      | `--background` (`neutral-950`)                                 | `Color/background`                                          | Primary elevated container surface             |
+| **Structural Border**       | `--border` (`neutral-200`)                                                                                      | `--border` (`neutral-800`)                                     | `Color/border`                                              | 1px solid stroke on cards, headers, & sidebars |
+| **Primary Text**            | `--foreground` (`neutral-900`)                                                                                  | `--foreground` (`#ffffff`)                                     | `Color/foreground`                                          | High contrast text & headers                   |
+| **Secondary Text**          | `--muted-foreground` (`neutral-500`)                                                                            | `--muted-foreground` (`neutral-400`)                           | `Color/muted-foreground`                                    | Navigation labels, subtitles, breadcrumb items |
+| **Active Nav Item**         | `--primary` (`blue-700`) + `--primary-foreground` (`blue-50`)                                                   | `--primary` (`blue-900`) + `--primary-foreground` (`blue-100`) | `Color/primary` + `Color/primary-foreground`                | Highlight for current active route             |
+| **Nav Hover State**         | `--accent` (`neutral-100`) + `--foreground`                                                                     | `--accent` (`neutral-900`) + `--foreground`                    | `Color/accent` + `Color/foreground`                         | Subtle hover fill on interactive items         |
+| **Scrollbar Track / Thumb** | `neutral-100` / `neutral-300`                                                                                   | `neutral-800` / `neutral-700`                                  | `Color/scrollbar-track` / `thumb`                           | Thin scrollbar (`w-1 h-0.5 rounded-full`)      |
+| **Corner Radii**            | Outer Containers: `rounded-2xl` (`18px`), Inner Items: `rounded-xl` (`14px`), Sub-blocks: `rounded-lg` (`10px`) | Scaled from `--radius: 0.625rem` (`10px`)                      | `Radius/2xl` (18px), `Radius/xl` (14px), `Radius/lg` (10px) | Strict 4px base radius scaling                 |
 
 ---
 
@@ -31,7 +32,7 @@ This document breaks down the core application shell found in `app/(web-app)/lay
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│ 1. Root Container (w-screen h-screen p-2 gap-1.5 bg-accent)                            │
+│ 1. Root Container (w-screen h-dvh p-2 gap-1.5 bg-accent)                            │
 │ ┌──────────────────────┐ ┌───────────────────────────────────────────────────────────┐ │
 │ │ 2. <Sidebar />       │ │ 3. <main> (flex-1 flex-col gap-1.5)                        │ │
 │ │                      │ │ ┌─────────────────────────────────────────────────────────┐│ │
@@ -76,32 +77,35 @@ The outermost viewport layer wrapping the entire application interface.
 Dedicated vertical navigation drawer/column located on the left side of the Root Container.
 
 ### Structural Anatomy
+
 1. **Header Top (`h-14` / 56px)**: App branding logo/title + Expand/Collapse toggle trigger.
 2. **Navigation Area (`flex-1 overflow-y-auto`)**: Categorized menu links (`Mainflow` and `Setting`).
 3. **User Info Footer (`shrink-0`)**: Profile badge, active role, avatar, and dropdown menu.
 
 ### Dimensions, Colors & Padding
 
-| State | Positioning & Width | Background & Border (Figma Tokens) | Inner Padding & Sizing |
-| :--- | :--- | :--- | :--- |
-| **Desktop Expanded** (`isSidebarExpand = true`) | `lg:static lg:w-64` (`256px`), `h-full` | Fill: `Color/background`<br>Stroke: `Color/border`<br>Radius: `Radius/2xl` (`18px`) | Header: `px-4 h-14`. Nav: `px-2 py-4 gap-1`. User card: `p-2.5 m-2`. |
-| **Desktop Collapsed** (`isSidebarExpand = false`) | `lg:static lg:w-18` (`72px` / `4.5rem`), `h-full` | Fill: `Color/background`<br>Stroke: `Color/border`<br>Radius: `Radius/2xl` (`18px`) | Menu items center-aligned: `w-10 h-10 mx-auto px-0`. Section titles show `•••`. |
-| **Mobile / Tablet** (`< 1024px`) | `fixed top-2 bottom-2 left-2 z-50 w-72 max-w-[calc(100vw-1rem)] shadow-2xl` | Fill: `Color/background`<br>Stroke: `Color/border`<br>Radius: `Radius/2xl` (`18px`) | Backed by `<Backdrop />` overlay (`fixed inset-0 bg-black/50 backdrop-blur-xs z-40`). |
+| State                                             | Positioning & Width                                                         | Background & Border (Figma Tokens)                                                  | Inner Padding & Sizing                                                                |
+| :------------------------------------------------ | :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
+| **Desktop Expanded** (`isSidebarExpand = true`)   | `lg:static lg:w-64` (`256px`), `h-full`                                     | Fill: `Color/background`<br>Stroke: `Color/border`<br>Radius: `Radius/2xl` (`18px`) | Header: `px-4 h-14`. Nav: `px-2 py-4 gap-1`. User card: `p-2.5 m-2`.                  |
+| **Desktop Collapsed** (`isSidebarExpand = false`) | `lg:static lg:w-18` (`72px` / `4.5rem`), `h-full`                           | Fill: `Color/background`<br>Stroke: `Color/border`<br>Radius: `Radius/2xl` (`18px`) | Menu items center-aligned: `w-10 h-10 mx-auto px-0`. Section titles show `•••`.       |
+| **Mobile / Tablet** (`< 1024px`)                  | `fixed top-2 bottom-2 left-2 z-50 w-72 max-w-[calc(100vw-1rem)] shadow-2xl` | Fill: `Color/background`<br>Stroke: `Color/border`<br>Radius: `Radius/2xl` (`18px`) | Backed by `<Backdrop />` overlay (`fixed inset-0 bg-black/50 backdrop-blur-xs z-40`). |
 
 ### Menu Item Styles & States (`<MenuItem />`)
+
 - **Height & Radius**: `h-10` (`40px`), Radius: `Radius/xl` (`14px`).
-- **Active Route**: 
+- **Active Route**:
   - Fill: `Color/primary`
   - Text: `Color/primary-foreground` (`font-semibold`)
   - Effect: `shadow-2xs`
-- **Inactive / Default**: 
+- **Inactive / Default**:
   - Text: `Color/muted-foreground` (`font-medium`)
-- **Hover State**: 
+- **Hover State**:
   - Fill: `Color/accent`
   - Text: `Color/foreground` (Smooth transition `duration-200`)
 - **Collapsed Tooltip**: When collapsed, hover displays a floating Shadcn Tooltip on the right (`side="right" sideOffset={8}`) with `Color/popover` fill and `Color/popover-foreground` text.
 
 ### Behavior & Responsive Transitions
+
 - **Desktop Toggle**: Clicking the sidebar trigger (`PanelLeftClose` / `PanelLeftOpen`) smoothly expands/collapses width between `256px` (`lg:w-64`) and `72px` (`lg:w-18`) with `transition-all duration-300 ease-in-out`.
 - **Mobile Drawer**: Off-canvas by default (`-translate-x-[calc(100%+1rem)]`). When opened (`isSidebarOpen = true`), slides in to `translate-x-0`.
 - **Auto-Close on Navigate**: Selecting any menu item on mobile immediately closes the sidebar drawer.
@@ -201,14 +205,14 @@ The main dynamic viewport where children pages (Dashboard, Pipeline Kanban, Data
 
 ## 📱 Summary Checklist for Responsive Behavior & Breakpoints
 
-| Feature | Mobile (`< 640px`) | Tablet Portrait (`640px - 1023px`) | Desktop (`>= 1024px`, `lg:`) |
-| :--- | :--- | :--- | :--- |
-| **Sidebar** | Hidden drawer (`w-72 fixed z-50`) + Backdrop | Hidden drawer (`w-72 fixed z-50`) + Backdrop | Static column (`w-64` expanded / `w-18` collapsed) |
-| **Mobile Header** | Visible (`h-16 px-4`) with hamburger | Visible (`h-16 px-4`) with hamburger | Completely hidden (`lg:hidden`) |
-| **ContentTop** | Visible inside White Box (`px-4 h-14`) | Visible inside White Box (`px-6 h-14`) | Visible inside White Box (`px-6 h-14`) |
-| **Theme Toggle** | Inside Mobile Header | Inside Mobile Header | Inside ContentTop right slot |
-| **Content Padding** | `16px` (`p-4`) | `24px` (`p-6`) | `24px` (`p-6`) |
-| **Window Scroll** | Locked (`overflow-hidden`) | Locked (`overflow-hidden`) | Locked (`overflow-hidden`) |
+| Feature             | Mobile (`< 640px`)                           | Tablet Portrait (`640px - 1023px`)           | Desktop (`>= 1024px`, `lg:`)                       |
+| :------------------ | :------------------------------------------- | :------------------------------------------- | :------------------------------------------------- |
+| **Sidebar**         | Hidden drawer (`w-72 fixed z-50`) + Backdrop | Hidden drawer (`w-72 fixed z-50`) + Backdrop | Static column (`w-64` expanded / `w-18` collapsed) |
+| **Mobile Header**   | Visible (`h-16 px-4`) with hamburger         | Visible (`h-16 px-4`) with hamburger         | Completely hidden (`lg:hidden`)                    |
+| **ContentTop**      | Visible inside White Box (`px-4 h-14`)       | Visible inside White Box (`px-6 h-14`)       | Visible inside White Box (`px-6 h-14`)             |
+| **Theme Toggle**    | Inside Mobile Header                         | Inside Mobile Header                         | Inside ContentTop right slot                       |
+| **Content Padding** | `16px` (`p-4`)                               | `24px` (`p-6`)                               | `24px` (`p-6`)                                     |
+| **Window Scroll**   | Locked (`overflow-hidden`)                   | Locked (`overflow-hidden`)                   | Locked (`overflow-hidden`)                         |
 
 ---
 
@@ -217,11 +221,13 @@ The main dynamic viewport where children pages (Dashboard, Pipeline Kanban, Data
 When prompting Figma Make or an AI Layout Designer to construct or update a layout:
 
 ### 1. Mandatory Token Library Verification Step
+
 - [ ] **Check `guidelines/token.md` first**: Confirm the role of each element before picking colors.
 - [ ] **Bind to Variables**: Never use unlinked hex colors. Attach every fill and stroke to its corresponding Figma variable (e.g. `Color/background`, `Color/accent`, `Color/border`, `Color/primary`).
 - [ ] **Radius Alignment**: Bind all corner radii to `Radius/2xl` (18px), `Radius/xl` (14px), or `Radius/lg` (10px).
 
 ### 2. Layout Structure Steps
+
 1. **Root Frame**: Create a Frame of `1440x900px`, fill `Color/accent`, padding `8px`, gap `6px`, horizontal auto-layout. Clip content: `true`.
 2. **Sidebar Frame**: Left column, `256px` width, fill `Color/background`, stroke `1px solid Color/border`, radius `Radius/2xl` (18px).
    - Header: `56px` height with logo + collapse trigger icon.
@@ -231,4 +237,3 @@ When prompting Figma Make or an AI Layout Designer to construct or update a layo
 4. **White Card**: Fill `Color/background`, stroke `1px solid Color/border`, radius `Radius/2xl` (18px), shadow `shadow-xs`, `Fill container` width and height.
 5. **ContentTop Bar**: Inside White Card, `56px` height, horizontal padding `24px` (`px-6`), bottom stroke `1px solid Color/border`, Breadcrumb/Title left (`Color/foreground`), Action buttons right.
 6. **Page Viewport**: Inside White Card below ContentTop, `Fill container` width and height, `24px` padding (`p-6`), ready for dashboard widgets or tables.
-

@@ -156,16 +156,19 @@ export function DealDetailActivityTimeline({
             );
 
             let Icon = MessageSquare;
-            let iconColor = "bg-primary/10 text-primary border-primary/20";
+            let iconColor =
+              "bg-primary text-primary-foreground border-primary/20";
             if (act.type === "EMAIL") {
               Icon = Mail;
-              iconColor = "bg-info/10 text-info border-info/20";
+              iconColor = "bg-info text-primary-foreground border-info/20";
             } else if (act.type === "CALL") {
               Icon = Phone;
-              iconColor = "bg-success/10 text-success border-success/20";
+              iconColor =
+                "bg-success text-primary-foreground border-success/20";
             } else if (act.type === "MEETING") {
               Icon = Calendar;
-              iconColor = "bg-warning/10 text-warning border-warning/20";
+              iconColor =
+                "bg-warning text-primary-foreground border-warning/20";
             }
 
             return (

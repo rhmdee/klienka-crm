@@ -31,25 +31,40 @@ export function Sheet({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, onOpenChange]);
 
+  // Lock body scroll when sheet is open
+  React.useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-stretch justify-center sm:justify-end">
       {/* Backdrop */}
       <div
         onClick={() => onOpenChange(false)}
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
       />
 
-      {/* Drawer Right Content */}
+      {/* Drawer Content: Bottom Sheet on Mobile, Slide-over Right on Desktop */}
       <div
         className={cn(
-          "relative z-50 flex h-full w-full max-w-md flex-col bg-background border-l border-border shadow-2xl p-5 overflow-y-auto transition-transform duration-300 animate-in slide-in-from-right",
+          "relative z-50 flex max-h-[85vh] sm:max-h-full h-auto sm:h-full w-full max-w-full sm:max-w-md flex-col bg-background rounded-t-2xl sm:rounded-none border-t border-border sm:border-t-0 sm:border-l shadow-2xl p-5 overflow-y-auto transition-transform duration-300 animate-in slide-in-from-bottom sm:slide-in-from-right",
           className,
         )}
       >
+        {/* Mobile handle drag bar */}
+        <div className="mx-auto w-10 h-1 rounded-full bg-muted-foreground/30 -mt-1 mb-3 sm:hidden shrink-0" />
+
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
+        <div className="flex items-center justify-between pb-4 border-b border-border mb-4 shrink-0">
           <div className="flex flex-col gap-0.5">
             {title && (
               <h2 className="text-base font-semibold text-foreground">
@@ -70,7 +85,7 @@ export function Sheet({
         </div>
 
         {/* Body */}
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 flex flex-col">{children}</div>
       </div>
     </div>
   );

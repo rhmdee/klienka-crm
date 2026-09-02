@@ -64,7 +64,7 @@ export function KanbanBoard({
           {canScrollRight && (
             <button
               onClick={() => handleScroll("right")}
-              className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-medium cursor-pointer animate-pulse transition-opacity"
+              className="inline-flex items-center gap-1.5 text-xs text-primary dark:text-foreground hover:underline font-medium cursor-pointer animate-pulse transition-opacity"
             >
               <span>Geser ke kanan untuk stage lainnya</span>
               <ArrowRight className="size-3.5" />
@@ -124,19 +124,6 @@ export function KanbanBoard({
             );
           })}
         </div>
-
-        {/* Right Shadow Gradient Indicator */}
-        {canScrollRight && (
-          <div
-            onClick={() => handleScroll("right")}
-            className="absolute right-0 top-0 bottom-4 w-12 bg-linear-to-l from-background via-background/60 to-transparent z-10 flex items-center justify-end pr-1 cursor-pointer transition-opacity group"
-            title="Klik untuk scroll ke kanan"
-          >
-            <div className="bg-background/90 border border-border shadow-sm rounded-full p-1 text-muted-foreground group-hover:text-primary transition-colors">
-              <ChevronRight className="size-4" />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

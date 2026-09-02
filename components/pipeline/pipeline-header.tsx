@@ -84,7 +84,7 @@ export function PipelineHeader({
               )}
             >
               <Layers className="size-3.5" />
-              <span>Kanban</span>
+              <span className="hidden sm:inline">Kanban</span>
             </button>
             <button
               type="button"
@@ -97,7 +97,7 @@ export function PipelineHeader({
               )}
             >
               <List className="size-3.5" />
-              <span>List View</span>
+              <span className="hidden sm:inline">List View</span>
             </button>
           </div>
 
